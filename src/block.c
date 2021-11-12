@@ -1,10 +1,11 @@
+#include "block.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "block.h"
 
-typedef struct blockStruct{
-
+// Estrutura da quadra
+typedef struct blockStruct {
     double x;
     double y;
     double width;
@@ -15,11 +16,11 @@ typedef struct blockStruct{
     char stroke[50];
     char thickness[50];
 
-}BlockStruct;
+} BlockStruct;
 
 // Cria a quadra
-Block createBlock(double x, double y, double width, double height, char* cep, char* fill, char* stroke, char* thickness){
-    BlockStruct* new = (BlockStruct* ) malloc(sizeof(BlockStruct));
+Block createBlock(double x, double y, double width, double height, char* cep, char* fill, char* stroke, char* thickness) {
+    BlockStruct* new = (BlockStruct*)malloc(sizeof(BlockStruct));
 
     new->x = x;
     new->y = y;
@@ -34,11 +35,11 @@ Block createBlock(double x, double y, double width, double height, char* cep, ch
     return new;
 }
 
-// Destroi a quadra
-int destroyBlock(Block block){
-    BlockStruct* blockAux = (BlockStruct* ) block;
+// Destrói a quadra
+int destroyBlock(Block block) {
+    BlockStruct* blockAux = (BlockStruct*)block;
 
-    if(blockAux == NULL){
+    if (blockAux == NULL) {
         return 0;
     }
 
@@ -47,57 +48,57 @@ int destroyBlock(Block block){
 }
 
 // Pega o X da quadra
-double getBlockX(Block block){
-    BlockStruct* blockAux = (BlockStruct* ) block;
+double getBlockX(Block block) {
+    BlockStruct* blockAux = (BlockStruct*)block;
 
     return blockAux->x;
 }
 
 // Pega o Y da quadra
-double getBlockY(Block block){
-    BlockStruct* blockAux = (BlockStruct* ) block;
+double getBlockY(Block block) {
+    BlockStruct* blockAux = (BlockStruct*)block;
 
     return blockAux->y;
 }
 
 // Pega a largura da quadra
-double getBlockWidth(Block block){
-    BlockStruct* blockAux = (BlockStruct* ) block;
+double getBlockWidth(Block block) {
+    BlockStruct* blockAux = (BlockStruct*)block;
 
     return blockAux->width;
 }
 
 // Pega a altura da quadra
-double getBlockHeight(Block block){
-    BlockStruct* blockAux = (BlockStruct* ) block;
+double getBlockHeight(Block block) {
+    BlockStruct* blockAux = (BlockStruct*)block;
 
     return blockAux->height;
 }
 
 // Pega o Cep da quadra
-char* getBlockCep(Block block){
-    BlockStruct* blockAux = (BlockStruct* ) block;
+char* getBlockCep(Block block) {
+    BlockStruct* blockAux = (BlockStruct*)block;
 
     return blockAux->cep;
 }
 
 // Pega a cor de preenchimento da quadra
-char* getBlockFill(Block block){
-    BlockStruct* blockAux = (BlockStruct* ) block;
+char* getBlockFill(Block block) {
+    BlockStruct* blockAux = (BlockStruct*)block;
 
     return blockAux->fill;
 }
 
 // Pega a cor da borda da quadra
-char* getBlockStroke(Block block){
-    BlockStruct* blockAux = (BlockStruct* ) block;
+char* getBlockStroke(Block block) {
+    BlockStruct* blockAux = (BlockStruct*)block;
 
     return blockAux->stroke;
 }
 
 // Pega a espessura da borda
-char* getBlockThickness(Block block){
-    BlockStruct* blockAux = (BlockStruct* ) block;
+char* getBlockThickness(Block block) {
+    BlockStruct* blockAux = (BlockStruct*)block;
 
     return blockAux->thickness;
 }
