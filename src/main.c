@@ -57,7 +57,7 @@ void readParameters(int argc, char *argv[]) {
         }
     }
 
-    printf("BED = %s\n", bed);
+    printf("\nBED = %s\n", bed);
     printf("GeoName = %s\n", geoName);
     printf("BSD = %s\n", bsd);
     printf("QryName = %s\n", qryName);
