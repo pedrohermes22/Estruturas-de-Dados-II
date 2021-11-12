@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Ponteiros para os parâmetros.
 char *bed, *geoName, *bsd, *qryName, *mapName;
@@ -56,12 +57,19 @@ void readParameters(int argc, char *argv[]) {
         }
     }
 
+    printf("BED = %s\n", bed);
+    printf("GeoName = %s\n", geoName);
+    printf("BSD = %s\n", bsd);
+    printf("QryName = %s\n", qryName);
+    printf("Map = %s\n\n", mapName);
     freeAll();
 }
 
 int main(int argc, char *argv[]) {
-    if (argc == 1)
+    if (argc == 1) {
+        printf("Few arguments.\n\n");
         return 0;
+    }
 
     readParameters(argc, argv);
     return 0;
