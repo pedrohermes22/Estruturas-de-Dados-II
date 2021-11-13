@@ -2,8 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "geo.h"
+#include "path.h"
+
 // Ponteiros para os parâmetros.
-char *bed, *geoName, *bsd, *qryName, *mapName;
+char *bed = NULL;
+char *geoName = NULL;
+char *bsd = NULL;
+char *qryName = NULL;
+char *mapName = NULL;
 
 // Desaloca memória dos ponteiros.
 void freeAll() {
@@ -28,31 +35,31 @@ void readParameters(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         // Diretório-base de entrada (BED).
         if (strcmp("-e", argv[i]) == 0) {
-            bed = (char *)calloc((strlen(argv[++i])) + 1, sizeof(char));
+            bed = (char *)calloc((strlen(argv[++i])) + 2, sizeof(char));
             strcpy(bed, argv[i]);
         }
 
         // Arquivo com a descrição da cidade.
         if (strcmp("-f", argv[i]) == 0) {
-            geoName = (char *)calloc((strlen(argv[++i])) + 1, sizeof(char));
+            geoName = (char *)calloc((strlen(argv[++i])) + 2, sizeof(char));
             strcpy(geoName, argv[i]);
         }
 
         // Diretório-base de saída (BSD).
         if (strcmp("-o", argv[i]) == 0) {
-            bsd = (char *)calloc((strlen(argv[++i])) + 1, sizeof(char));
+            bsd = (char *)calloc((strlen(argv[++i])) + 2, sizeof(char));
             strcpy(bsd, argv[i]);
         }
 
         // Arquivo com consultas.
         if (strcmp("-q", argv[i]) == 0) {
-            qryName = (char *)calloc((strlen(argv[++i])) + 1, sizeof(char));
+            qryName = (char *)calloc((strlen(argv[++i])) + 2, sizeof(char));
             strcpy(qryName, argv[i]);
         }
 
         // Arquivo de vias (para construção do grafo).
         if (strcmp("-v", argv[i]) == 0) {
-            mapName = (char *)calloc((strlen(argv[++i])) + 1, sizeof(char));
+            mapName = (char *)calloc((strlen(argv[++i])) + 2, sizeof(char));
             strcpy(mapName, argv[i]);
         }
     }
@@ -62,7 +69,11 @@ void readParameters(int argc, char *argv[]) {
     printf("BSD = %s\n", bsd);
     printf("QryName = %s\n", qryName);
     printf("Map = %s\n\n", mapName);
+
+    char *geoAux = catPath(bed, geoName);
+    openGeo(geoAux);
     freeAll();
+    free(geoAux);
 }
 
 int main(int argc, char *argv[]) {
