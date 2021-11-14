@@ -1,1 +1,0 @@
-valgrind --leak-check=full ./t2 -e ./bed/ -f /geoFile.geo -o ./bsd/ -q /qryFile.qry -v /mapFile.via
