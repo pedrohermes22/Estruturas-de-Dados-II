@@ -1,6 +1,7 @@
 *.o
 ./out
-./teste
+teste
+o
 ./bed
 ./bsd
 ./src/t2
