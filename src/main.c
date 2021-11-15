@@ -74,6 +74,7 @@ void openFiles(Tree tree, char *bed, char *geoName, char *qryName, char *mapName
     free(qryPath);
     free(mapPath);
     free(svgPath);
+    destroyGraph(graph);
     fclose(svgFile);
 }
 
