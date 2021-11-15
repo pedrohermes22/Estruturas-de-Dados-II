@@ -5,11 +5,11 @@
 
 #include "block.h"
 #include "geo.h"
+#include "graph.h"
 #include "map.h"
 #include "path.h"
 #include "qry.h"
 #include "svg.h"
-#include "graph.h"
 #include "tree.h"
 
 /*
@@ -64,15 +64,19 @@ void openFiles(Tree tree, char *bed, char *geoName, char *qryName, char *mapName
 
     Graph graph = createGraph();
 
-    char *qryPath = catPath(bed, qryName);
-    char *mapPath = catPath(bed, mapName);
+    if (mapName != NULL) {
+        char *mapPath = catPath(bed, mapName);
+        openMap(mapPath, graph);
+        free(mapPath);
+    }
 
-    openMap(mapPath, graph);
-    openQry(qryPath);
+    if (qryName != NULL) {
+        char *qryPath = catPath(bed, qryName);
+        openQry(qryPath);
+        free(qryPath);
+    }
 
     free(geoPath);
-    free(qryPath);
-    free(mapPath);
     free(svgPath);
     destroyGraph(graph);
     fclose(svgFile);
@@ -80,7 +84,7 @@ void openFiles(Tree tree, char *bed, char *geoName, char *qryName, char *mapName
 
 // Manipula os parâmetros da execução. Todos os ponteiros são alocados nessa função.
 void readParameters(Tree tree, int argc, char *argv[]) {
-    char *bed, *geoName = NULL, *bsd = NULL, *qryName, *mapName;
+    char *bed = NULL, *geoName = NULL, *bsd = NULL, *qryName = NULL, *mapName = NULL;
 
     for (int i = 1; i < argc; i++) {
         // Diretório-base de entrada (BED).
