@@ -1,16 +1,19 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
+#include "block.h"
 #include "geo.h"
 #include "map.h"
 #include "path.h"
 #include "qry.h"
-#include "tree.h"
 #include "svg.h"
+#include "tree.h"
 
-// Desaloca memória dos ponteiros.
+/*
+ * Desaloca memória alocada aos ponteiros.
+ */
 void freeAll(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
     if (bed != NULL)
         free(bed);
@@ -28,7 +31,13 @@ void freeAll(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) 
         free(mapName);
 }
 
-// Verifica se os parâmetros obrigatórios foram preenchidos. 0 = Não; 1 = Sim.
+/*
+ * Verifica se os parâmetros obrigatórios para a execução foram inseridos.
+ *
+ * Retorno: 0 = Parâmetros faltando. 1 = Nenhum parâmetro faltando.
+ * Quando 0: Desaloca a memória alocada aos ponteiros usando "freeAll".
+ * Quando 1: Continua a execução do programa.
+ */
 int verify(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
     if ((geoName == NULL) || (bsd == NULL)) {
         freeAll(bed, geoName, bsd, qryName, mapName);
@@ -38,7 +47,7 @@ int verify(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
     return 1;
 }
 
-// Abre os arquivos ".geo", ".qry" e ".via".
+// Chama as funções que fazem a leitura dos arquivos de entrada. Produz um SVG "original" do GEO.
 void openFiles(Tree tree, char *bed, char *geoName, char *qryName, char *mapName, char *bsd) {
     char *geoPath = catPath(bed, geoName);
 
@@ -47,7 +56,7 @@ void openFiles(Tree tree, char *bed, char *geoName, char *qryName, char *mapName
         return;
     }
 
-    char *svgPath = catPath(bsd, "SVG_FILE.svg");
+    char *svgPath = catPath(bsd, "NOME_DO_SVG.svg");
 
     FILE *svgFile = fopen(svgPath, "w");
     drawBlocks(tree, svgFile);
@@ -61,9 +70,11 @@ void openFiles(Tree tree, char *bed, char *geoName, char *qryName, char *mapName
     free(geoPath);
     free(qryPath);
     free(mapPath);
+    free(svgPath);
+    fclose(svgFile);
 }
 
-// Manipula os parâmetros da execução.
+// Manipula os parâmetros da execução. Todos os ponteiros são alocados nessa função.
 void readParameters(Tree tree, int argc, char *argv[]) {
     char *bed, *geoName = NULL, *bsd = NULL, *qryName, *mapName;
 
@@ -99,7 +110,7 @@ void readParameters(Tree tree, int argc, char *argv[]) {
         }
     }
 
-    // Parâmetros obrigatórios.
+    // Verifica se os parâmetros obrigatórios foram preenchidos.
     if (!verify(bed, geoName, bsd, qryName, mapName))
         return;
 
@@ -108,16 +119,15 @@ void readParameters(Tree tree, int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc == 1) {
-        printf("Few arguments.\n\n");
+    if (argc == 1)
         return 0;
-    }
 
-    Tree tree = treeCreate("Quadra");
+    Tree tree = treeCreate("Quadras");
 
     readParameters(tree, argc, argv);
+
+    blockDeleteAll(getTreeRoot(tree));
     treeEnd(tree);
-    // free(tree);
 
     return 0;
 }
