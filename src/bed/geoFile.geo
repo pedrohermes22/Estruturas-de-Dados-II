@@ -1,3 +1,0 @@
-EU
-TE
-AMO

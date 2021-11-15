@@ -3,7 +3,9 @@
 #include <string.h>
 
 #include "geo.h"
+#include "map.h"
 #include "path.h"
+#include "qry.h"
 
 // Desaloca memória dos ponteiros.
 void freeAll(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
@@ -23,9 +25,39 @@ void freeAll(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) 
         free(mapName);
 }
 
+// Verifica se os parâmetros obrigatórios foram preenchidos. 0 = Não; 1 = Sim.
+int verify(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
+    if ((geoName == NULL) || (bsd == NULL)) {
+        freeAll(bed, geoName, bsd, qryName, mapName);
+        return 0;
+    }
+
+    return 1;
+}
+
+// Abre os arquivos ".geo", ".qry" e ".via".
+void openFiles(char *bed, char *geoName, char *qryName, char *mapName) {
+    char *geoPath = catPath(bed, geoName);
+
+    if (!openGeo(geoPath)) {
+        free(geoPath);
+        return;
+    }
+
+    char *qryPath = catPath(bed, qryName);
+    char *mapPath = catPath(bed, mapName);
+
+    openMap(mapPath);
+    openQry(qryPath);
+
+    free(geoPath);
+    free(qryPath);
+    free(mapPath);
+}
+
 // Manipula os parâmetros da execução.
 void readParameters(int argc, char *argv[]) {
-    char *bed, *geoName, *bsd, *qryName, *mapName;
+    char *bed, *geoName = NULL, *bsd = NULL, *qryName, *mapName;
 
     for (int i = 1; i < argc; i++) {
         // Diretório-base de entrada (BED).
@@ -60,15 +92,11 @@ void readParameters(int argc, char *argv[]) {
     }
 
     // Parâmetros obrigatórios.
-    if ((geoName == NULL) || (bsd == NULL)) {
-        printf("Faltando algo.\n\n");
+    if (!verify(bed, geoName, bsd, qryName, mapName))
         return;
-    }
 
-    char *geoAux = catPath(bed, geoName);
-    openGeo(geoAux);
+    openFiles(bed, geoName, qryName, mapName);
     freeAll(bed, geoName, bsd, qryName, mapName);
-    free(geoAux);
 }
 
 int main(int argc, char *argv[]) {

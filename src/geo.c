@@ -4,35 +4,32 @@
 
 // Lê os argumentos do arquivo ".geo".
 void readGeoArguments(FILE *geoFile) {
-    char command[50], cep[100], fill[50], stroke[50], thickness[50];
+    char trash[10], line[200];
+    char cep[100], fill[50], stroke[50], thickness[50];
     double x, y, width, height;
 
-    while (fscanf(geoFile, "%s", command) != EOF) {
+    while (fgets(line, sizeof(line), geoFile) != NULL) {
         // Insere uma quadra.
-        if (strcmp(command, "q") == 0) {
-            fscanf(geoFile, "%s %lf %lf %lf %lf", cep, &x, &y, &width, &height);
-
-            // if (*hashCityBlocks == NULL)
-            //     *hashCityBlocks = createHash(nx);
-
-            // insertBlock(tree, *hashCityBlocks, cep, strokeWidth, colorFill, colorStroke, x, y, w, h);
-        }
+        if (strncmp(line, "q ", 2) == 0)
+            sscanf(line, "%s %s %lf %lf %lf %lf", trash, cep, &x, &y, &width, &height);
 
         // Define aspectos visuais das quadras.
-        if (strcmp(command, "cq") == 0)
-            fscanf(geoFile, "%s %s %s", thickness, fill, stroke);
+        if (strncmp(line, "cq ", 3) == 0)
+            sscanf(line, "%s %s %s %s", trash, thickness, fill, stroke);
     }
 }
 
 // Abre o arquivo ".geo" e chama função de leitura de parâmetros.
-void openGeo(char geoPath[]) {
+int openGeo(char geoPath[]) {
     FILE *geoFile = fopen(geoPath, "r");
 
     if (geoFile == NULL) {
         printf("Geo file not found.\n\n");
-        return;
+        return 0;
     }
 
     readGeoArguments(geoFile);
     fclose(geoFile);
+
+    return 1;
 }

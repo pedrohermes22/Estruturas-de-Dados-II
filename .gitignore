@@ -1,5 +1,7 @@
 *.o
 ./out
 ./teste
+./bed
+./bsd
 *.md
 *.exe

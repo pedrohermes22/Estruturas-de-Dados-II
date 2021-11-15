@@ -10,6 +10,8 @@ void readMapArguments(FILE *mapFile) {
     double x, y, length, speed;
 
     while (fgets(line, sizeof(line), mapFile) != NULL) {
+        printf("%s\n", line);
+
         // Comando "nv".
         if (strncmp(line, "nv ", 3) == 0) {
             sscanf(line, "%s %d", trash, &vertex);

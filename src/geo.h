@@ -2,6 +2,6 @@
 #define _GEO_H_
 
 // Abre o arquivo ".geo" e chama função de leitura de parâmetros.
-void openGeo(char geoPath[]);
+int openGeo(char geoPath[]);
 
 #endif

@@ -30,6 +30,8 @@ void readQryArguments(FILE *qryFile) {
     double x, y, width, height, factor;
 
     while (fgets(line, sizeof(line), qryFile) != NULL) {
+        printf("%s\n", line);
+
         // Comando "@o?".
         if (strncmp(line, "@o? ", 4) == 0) {
             sscanf(line, "%s %s %c %d", trash, cep, &face, &number);

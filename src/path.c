@@ -53,6 +53,7 @@ char* catPath(char* path1, char* path2) {
         fullPath = (char*)malloc((strlen(path1) + strlen(path2) + 1) * sizeof(char));
         sprintf(fullPath, "%s%s", path1, path2);
     }
+
     return fullPath;
 }
 
