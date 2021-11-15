@@ -3,5 +3,6 @@
 ./teste
 ./bed
 ./bsd
+./src/t2
 *.md
 *.exe
