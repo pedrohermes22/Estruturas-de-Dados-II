@@ -5,15 +5,8 @@
 #include "geo.h"
 #include "path.h"
 
-// Ponteiros para os parâmetros.
-char *bed = NULL;
-char *geoName = NULL;
-char *bsd = NULL;
-char *qryName = NULL;
-char *mapName = NULL;
-
 // Desaloca memória dos ponteiros.
-void freeAll() {
+void freeAll(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
     if (bed != NULL)
         free(bed);
 
@@ -32,6 +25,8 @@ void freeAll() {
 
 // Manipula os parâmetros da execução.
 void readParameters(int argc, char *argv[]) {
+    char *bed, *geoName, *bsd, *qryName, *mapName;
+
     for (int i = 1; i < argc; i++) {
         // Diretório-base de entrada (BED).
         if (strcmp("-e", argv[i]) == 0) {
@@ -64,15 +59,15 @@ void readParameters(int argc, char *argv[]) {
         }
     }
 
-    printf("\nBED = %s\n", bed);
-    printf("GeoName = %s\n", geoName);
-    printf("BSD = %s\n", bsd);
-    printf("QryName = %s\n", qryName);
-    printf("Map = %s\n\n", mapName);
+    // Parâmetros obrigatórios.
+    if ((geoName == NULL) || (bsd == NULL)) {
+        printf("Faltando algo.\n\n");
+        return;
+    }
 
     char *geoAux = catPath(bed, geoName);
     openGeo(geoAux);
-    freeAll();
+    freeAll(bed, geoName, bsd, qryName, mapName);
     free(geoAux);
 }
 
