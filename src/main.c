@@ -6,6 +6,7 @@
 #include "map.h"
 #include "path.h"
 #include "qry.h"
+#include "tree.h"
 
 // Desaloca memória dos ponteiros.
 void freeAll(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
@@ -36,10 +37,10 @@ int verify(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
 }
 
 // Abre os arquivos ".geo", ".qry" e ".via".
-void openFiles(char *bed, char *geoName, char *qryName, char *mapName) {
+void openFiles(Tree *tree, char *bed, char *geoName, char *qryName, char *mapName) {
     char *geoPath = catPath(bed, geoName);
 
-    if (!openGeo(geoPath)) {
+    if (!openGeo(tree, geoPath)) {
         free(geoPath);
         return;
     }
@@ -56,7 +57,7 @@ void openFiles(char *bed, char *geoName, char *qryName, char *mapName) {
 }
 
 // Manipula os parâmetros da execução.
-void readParameters(int argc, char *argv[]) {
+void readParameters(Tree *tree, int argc, char *argv[]) {
     char *bed, *geoName = NULL, *bsd = NULL, *qryName, *mapName;
 
     for (int i = 1; i < argc; i++) {
@@ -95,7 +96,7 @@ void readParameters(int argc, char *argv[]) {
     if (!verify(bed, geoName, bsd, qryName, mapName))
         return;
 
-    openFiles(bed, geoName, qryName, mapName);
+    openFiles(tree, bed, geoName, qryName, mapName);
     freeAll(bed, geoName, bsd, qryName, mapName);
 }
 
@@ -105,6 +106,11 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    readParameters(argc, argv);
+    Tree tree = treeCreate("Quadra");
+
+    readParameters(tree, argc, argv);
+    treeEnd(tree);
+    // free(tree);
+
     return 0;
 }
