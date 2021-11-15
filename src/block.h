@@ -1,5 +1,6 @@
 #ifndef __BLOCK_H
 #define __BLOCK_H
+#include "tree.h"
 
 typedef void* Block;
 

@@ -1,11 +1,11 @@
 #ifndef __AVL_H
 #define __AVL_H
 
-typedef void* Info;
+#include "list.h"
+
 typedef void* Tree;
 typedef void* Node;
 
-#include "list.h"
 
 
 /*

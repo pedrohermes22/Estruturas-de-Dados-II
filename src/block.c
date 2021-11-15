@@ -65,7 +65,7 @@ void blockDeleteAll(Node root){
     for(NodeL* nodeAux = getListFirst(list); nodeAux; nodeAux = getListNext(nodeAux)){
         Info block = getTreeListItem(getListInfo(nodeAux));
         
-        blockDelete(block);
+        destroyBlock(block);
     }
 }
 

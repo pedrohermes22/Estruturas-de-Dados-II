@@ -48,6 +48,32 @@ Graph createGraph(){
     return new;
 }
 
+int destroyGraph(Graph graph){
+    GraphStruct* graphAux = (GraphStruct* ) graph;
+
+    if(graphAux == NULL){
+        return 0;
+    }
+
+    for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
+        AdjList* adjAux = (AdjList* ) getListInfo(nodeAux);
+
+
+        for(NodeL nodeAux2 = getListFirst(adjAux->edge); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
+            EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux2);
+
+            free(edge);
+        }
+        endList(adjAux->edge);
+        free(adjAux);
+    }
+
+    endList(graphAux->adj);
+    free(graphAux);
+
+    return 1;
+}
+
 int insertVertexGraph(Graph graph, char* id, double x, double y){
     GraphStruct* graphAux = (GraphStruct* ) graph;
 
@@ -123,7 +149,7 @@ int deleteVertexGraph(Graph graph, char* id){
     }
 
     for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
-        AdjList* adjAux = getListInfo(nodeAux);
+        AdjList* adjAux = (AdjList* ) getListInfo(nodeAux);
 
         if(strcmp(id, adjAux->vertex.id) == 0){
             for(NodeL nodeAux2 = getListFirst(adjAux->edge); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
@@ -157,10 +183,21 @@ int deleteEdgeGraph(Graph graph, char* origin, char* destiny){
     }
 
     for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
-        EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux2);
+        AdjList* adjAux = (AdjList* ) getListInfo(nodeAux);
 
-        if(strcmp(edge->origin, origin) == 0){
-            
+        if(strcmp(adjAux->vertex.id, origin) == 0){
+
+            for(NodeL nodeAux2 = getListFirst(adjAux->edge); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
+                EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux2);
+
+                if(strcmp(edge->destiny, destiny) == 0){
+                    removeListNode(adjAux->edge, nodeAux2);
+                    free(edge);
+                    return 1;
+                }
+            } 
         }
     }
+
+    return 0;
 }
