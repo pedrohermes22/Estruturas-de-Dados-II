@@ -6,7 +6,6 @@ typedef void* Tree;
 typedef void* Node;
 
 #include "list.h"
-#include "hashtable.h"
 
 
 /*
