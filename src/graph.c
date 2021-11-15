@@ -123,6 +123,44 @@ int deleteVertexGraph(Graph graph, char* id){
     }
 
     for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
-        
+        AdjList* adjAux = getListInfo(nodeAux);
+
+        if(strcmp(id, adjAux->vertex.id) == 0){
+            for(NodeL nodeAux2 = getListFirst(adjAux->edge); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
+                EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux2);
+
+                free(edge);
+            }
+            endList(adjAux->edge);
+            free(adjAux);
+
+        }else{
+            for(NodeL nodeAux2 = getListFirst(adjAux->edge); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
+                EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux2);
+
+                if(strcmp(edge->destiny, id) == 0){
+                    removeListNode(adjAux->edge, nodeAux2);
+                    free(edge);
+                }
+            } 
+        }
+    }
+
+    return 1;
+}
+
+int deleteEdgeGraph(Graph graph, char* origin, char* destiny){
+    GraphStruct* graphAux = (GraphStruct* ) graph;
+
+    if(graphAux == NULL){
+        return 0;
+    }
+
+    for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
+        EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux2);
+
+        if(strcmp(edge->origin, origin) == 0){
+            
+        }
     }
 }

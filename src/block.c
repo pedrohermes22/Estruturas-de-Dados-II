@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "tree.h"
 
 // Estrutura da quadra
 typedef struct blockStruct {
@@ -44,6 +45,28 @@ int destroyBlock(Block block) {
 
     free(blockAux);
     return 1;
+}
+
+// Percorre uma estrutura de árvore e vai deletando todas as quadras das listas
+void blockDeleteAll(Node root){
+    if(root == NULL){
+        return;
+    }
+
+    blockDeleteAll(getTreeRight(root));
+    blockDeleteAll(getTreeLeft(root));
+
+    List* list = getTreeNodeItens(root);
+
+    if(list == NULL){
+        return;
+    }
+
+    for(NodeL* nodeAux = getListFirst(list); nodeAux; nodeAux = getListNext(nodeAux)){
+        Info block = getTreeListItem(getListInfo(nodeAux));
+        
+        blockDelete(block);
+    }
 }
 
 // Pega o X da quadra

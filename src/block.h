@@ -19,6 +19,13 @@ Pós: Retorna 1 se sucesso ou 0 para falha.
 int destroyBlock(Block block);
 
 /*
+Função: Deleta todas as quadras de uma estrutura de árvore
+Pré: Um void* com o endereço da árvore;
+Pós: Nenhum retorno.
+*/
+void blockDeleteAll(Node root);
+
+/*
 Função: Retorna o valor de x de uma quadra;
 Pré: Um void* com quadra;
 Pós: Retorna o x.
