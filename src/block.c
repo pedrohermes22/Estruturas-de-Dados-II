@@ -15,7 +15,6 @@ typedef struct blockStruct {
     char fill[50];
     char stroke[50];
     char thickness[50];
-
 } BlockStruct;
 
 // Cria a quadra
