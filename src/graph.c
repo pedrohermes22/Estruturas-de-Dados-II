@@ -1,42 +1,40 @@
+#include "graph.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "graph.h"
+
 #include "list.h"
 
-typedef struct graphStruct{
-
+typedef struct graphStruct {
     int amountVertex;
     int amountEdge;
     List adj;
+} GraphStruct;
 
-}GraphStruct;
-
-typedef struct edgeStruct{
+typedef struct edgeStruct {
     char name[100];
     char cepRight[100];
     char cepLeft[100];
 
     double size;
     double speed;
+} EdgeStruct;
 
-}EdgeStruct;
-
-typedef struct vertexStruct{
+typedef struct vertexStruct {
     char id[100];
     double x;
     double y;
+} VertexStruct;
 
-}VertexStruct;
-typedef struct adjList{
-
+typedef struct adjList {
     VertexStruct vertex;
     List edge;
 
-}AdjList;
+} AdjList;
 
-Graph createGraph(){
-    GraphStruct* new = (GraphStruct* ) malloc(sizeof(GraphStruct));
+Graph createGraph() {
+    GraphStruct* new = (GraphStruct*)malloc(sizeof(GraphStruct));
 
     new->adj = createList();
     new->amountEdge = 0;
@@ -45,6 +43,5 @@ Graph createGraph(){
     return new;
 }
 
-int insertVertexGraph(Graph graph, char* id, double x, double y){
-
+int insertVertexGraph(Graph graph, char* id, double x, double y) {
 }
