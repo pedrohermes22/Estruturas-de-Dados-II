@@ -9,6 +9,7 @@
 #include "qry.h"
 #include "tree.h"
 #include "svg.h"
+#include "graph.h"
 
 // Desaloca memória dos ponteiros.
 void freeAll(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
@@ -52,10 +53,12 @@ void openFiles(Tree tree, char *bed, char *geoName, char *qryName, char *mapName
     FILE *svgFile = fopen(svgPath, "w");
     drawBlocks(tree, svgFile);
 
+    Graph graph = createGraph();
+
     char *qryPath = catPath(bed, qryName);
     char *mapPath = catPath(bed, mapName);
 
-    openMap(mapPath);
+    openMap(mapPath, graph);
     openQry(qryPath);
 
     free(geoPath);
