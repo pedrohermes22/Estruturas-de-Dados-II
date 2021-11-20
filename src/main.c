@@ -11,7 +11,7 @@
 #include "qry.h"
 #include "svg.h"
 #include "tree.h"
- 
+
 /*
  * Desaloca memória alocada aos ponteiros.
  */
