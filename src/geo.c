@@ -26,7 +26,7 @@ void readGeoArguments(Tree *tree, FILE *geoFile) {
 }
 
 // Abre o arquivo ".geo" e chama função de leitura de parâmetros.
-int openGeo(Tree *tree, char geoPath[]) {
+int openGeo(Tree tree, char geoPath[]) {
     FILE *geoFile = fopen(geoPath, "r");
 
     if (geoFile == NULL) {

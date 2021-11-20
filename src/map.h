@@ -4,6 +4,6 @@
 #include "graph.h"
 
 // Abre o arquivo ".via" e chama função de leitura de parâmetros.
-void openMap(char mapPath[], Graph graph);
+void openMap(char mapPath[], Graph graph, FILE *svgFile);
 
 #endif
