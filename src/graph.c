@@ -8,7 +8,6 @@
 typedef struct graphStruct{
 
     int amountVertex;
-    int amountEdge;
     List adj;
 
 }GraphStruct;
@@ -48,7 +47,6 @@ Graph createGraph(){
     GraphStruct* new = (GraphStruct* ) malloc(sizeof(GraphStruct));
 
     new->adj = createList();
-    new->amountEdge = 0;
     new->amountVertex = 0;
 
     return new;
@@ -153,8 +151,6 @@ int insertEdgeGraph(Graph graph, char* origin, char* destiny, char* cepRight, ch
 
     insertListElement(originAdj->edge, new);
 
-    graphAux->amountEdge++;
-
     return 1;
 }
 
@@ -179,6 +175,7 @@ int deleteVertexGraph(Graph graph, char* id){
             }
             endList(adjAux->edge);
             free(adjAux);
+            graphAux->amountVertex--;
 
         }else{
             // Se não, busca arestas que tem o vértice como destino e também apaga
