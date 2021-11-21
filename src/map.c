@@ -34,7 +34,7 @@ void readMapArguments(FILE *mapFile, Graph graph, FILE *svgFile) {
 }
 
 // Abre o arquivo ".via" e chama função de leitura de parâmetros.
-void openMap(char mapPath[], Graph graph, FILE *svgFile) {
+void openMap(char *mapPath, Graph graph, FILE *svgFile) {
     FILE *mapFile = fopen(mapPath, "r");
 
     if (mapFile == NULL) return;

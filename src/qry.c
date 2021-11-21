@@ -2,12 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "text.h"
+
 // Executa comando "@o?".
 void oCommand(char cep[], char face, int number) {
 }
 
 // Executa comando "catac".
 void catacCommand(double x, double y, double width, double height) {
+    char rect[200];
+
+    sprintf(rect,
+            "\t<rect x='%lf' y='%lf' width='%lf' height='%lf' fill='none' stroke='red' stroke-width='1' stroke-dasharray='2' fill-opacity='0.5'/>\n",
+            x, y, width, height);
+    writeTempTxt(rect);
 }
 
 // Executa comando "rv".
@@ -38,6 +46,7 @@ void readQryArguments(FILE *qryFile) {
         // Comando "catac".
         if (strncmp(line, "catac ", 6) == 0) {
             sscanf(line, "%s %lf %lf %lf %lf", trash, &x, &y, &width, &height);
+            catacCommand(x, y, width, height);
         }
 
         // Comando "rv".

@@ -10,18 +10,16 @@
 #include "path.h"
 #include "qry.h"
 #include "svg.h"
+#include "text.h"
 #include "tree.h"
+#include "utils.h"
 
 // Desaloca memória alocada aos ponteiros.
 void freeAll(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
     if (bed != NULL) free(bed);
-
     if (geoName != NULL) free(geoName);
-
     if (bsd != NULL) free(bsd);
-
     if (qryName != NULL) free(qryName);
-
     if (mapName != NULL) free(mapName);
 }
 
@@ -36,51 +34,55 @@ int verify(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
     return 1;
 }
 
-/* Chama as funções que fazem a leitura dos arquivos de entrada. Produz um SVG
-   "original" do GEO.*/
-void openFiles(Tree tree, char *bed, char *geoName, char *qryName, char *mapName, char *bsd) {
+// Executa comandos referentes ao ".geo".
+int geoCommands(Tree tree, FILE *svgFile, char *bed, char *bsd, char *geoName) {
     char *geoPath = catPath(bed, geoName);
 
     if (!openGeo(tree, geoPath)) {
         free(geoPath);
-        return;
+        return 0;
     }
 
-    char *geoOnlyName = extractName(geoName);
-    char *svgName = (char *)calloc(strlen(geoOnlyName) + 5, sizeof(char));
-    sprintf(svgName, "%s.svg", geoOnlyName);
-    char *svgPath = catPath(bsd, svgName);
-
-    FILE *svgFile = fopen(svgPath, "w");
     openSvg(svgFile);
     drawBlocks(tree, svgFile);
 
-    Graph graph = createGraph();
-
-    if (mapName != NULL) {
-        char *mapPath = catPath(bed, mapName);
-        openMap(mapPath, graph, svgFile);
-        closeSvg(svgFile);
-        free(mapPath);
-    }
-
-    if (qryName != NULL) {
-        char *qryPath = catPath(bed, qryName);
-        openQry(qryPath);
-        free(qryPath);
-    }
-
-    free(svgName);
-    free(geoOnlyName);
     free(geoPath);
+    return 1;
+}
+
+// Executa comandos referentes ao ".via".
+void mapCommands(Graph graph, FILE *svgFile, char *bed, char *bsd, char *mapName) {
+    char *mapPath = catPath(bed, mapName);
+
+    openMap(mapPath, graph, svgFile);
+    free(mapPath);
+}
+
+// Executa comandos referentes ao ".qry".
+void qryCommands(Graph graph, char *bed, char *bsd, char *qryName) {
+    char *qryPath = catPath(bed, qryName);
+    char *svgPath = getSvgPath(bsd, qryName);
+    char dir[200];  // Diretório do arquivo ".txt" temporário.
+    FILE *svgFile = fopen(svgPath, "w");
+
+    sprintf(dir, "%s/TEMP_TXT.txt", bsd);
+
+    openTempTxt(bsd);
+    openSvg(svgFile);
+    openQry(qryPath);
+    closeTempTxt();
+    insertTempTxt(fopen(dir, "r"), svgFile);
+    closeSvg(svgFile);
+
+    free(qryPath);
     free(svgPath);
-    destroyGraph(graph);
     fclose(svgFile);
 }
 
 // Manipula os parâmetros da execução.
 void readParameters(Tree tree, int argc, char *argv[]) {
     char *bed = NULL, *geoName = NULL, *bsd = NULL, *qryName = NULL, *mapName = NULL;
+    Graph graph = createGraph();
 
     for (int i = 1; i < argc; i++) {
         // Diretório-base de entrada (BED).
@@ -117,8 +119,21 @@ void readParameters(Tree tree, int argc, char *argv[]) {
     // Verifica se os parâmetros obrigatórios foram preenchidos.
     if (!verify(bed, geoName, bsd, qryName, mapName)) return;
 
-    openFiles(tree, bed, geoName, qryName, mapName, bsd);
+    char *svgPath = getSvgPath(bsd, geoName);
+    FILE *svgFile = fopen(svgPath, "w");
+
+    if (!geoCommands(tree, svgFile, bed, bsd, geoName)) return;
+    if (mapName != NULL) mapCommands(graph, svgFile, bed, bsd, mapName);
+
+    // Fecha o SVG aberto anteriormente.
+    closeSvg(svgFile);
+    fclose(svgFile);
+
+    if (qryName != NULL) qryCommands(graph, bed, bsd, qryName);
+
     freeAll(bed, geoName, bsd, qryName, mapName);
+    free(svgPath);
+    destroyGraph(graph);
 }
 
 int main(int argc, char *argv[]) {
@@ -127,7 +142,6 @@ int main(int argc, char *argv[]) {
     Tree tree = treeCreate("Quadras");
 
     readParameters(tree, argc, argv);
-
     blockDeleteAll(getTreeRoot(tree));
     treeEnd(tree);
 

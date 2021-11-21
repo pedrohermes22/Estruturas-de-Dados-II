@@ -43,7 +43,7 @@ void openSvg(FILE *svgFile) {
     fprintf(svgFile, "<svg>");
 }
 
-// Fecha a tag <svg> no arquivo SVG.
+// Fecha a tag <svg> no arquivo SVG, mas não libera o ponteiro do arquivo.
 void closeSvg(FILE *svgFile) {
     if (svgFile == NULL) return;
 
@@ -58,4 +58,16 @@ void drawCircle(FILE *svgFile, double x, double y, double r, char *fill) {
     fprintf(svgFile,
             "\t<circle cx='%lf' cy='%lf' r='%lf' fill='%s' stroke-width='2'/>\n",
             x, y, r, fill);
+}
+
+// Insere as linhas do arquivo temporário no SVG. Libera o ponteiro do arquivo ".txt".
+void insertTempTxt(FILE *tempTxt, FILE *svgFile) {
+    if (tempTxt == NULL) return;
+
+    char line[200];
+
+    while (fgets(line, sizeof(line), tempTxt) != NULL)
+        fprintf(svgFile, "%s", line);
+
+    fclose(tempTxt);
 }
