@@ -225,3 +225,9 @@ int deleteEdgeGraph(Graph graph, char* origin, char* destiny){
 
     return 0;
 }
+
+int getAmountVertex(Graph graph){
+    GraphStruct* graphAux = (GraphStruct* ) graph;
+
+    return graphAux->amountVertex;
+}

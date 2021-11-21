@@ -15,4 +15,6 @@ int deleteVertexGraph(Graph graph, char* id);
 
 int deleteEdgeGraph(Graph graph, char* origin, char* destiny);
 
+int getAmountVertex(Graph graph);
+
 #endif
