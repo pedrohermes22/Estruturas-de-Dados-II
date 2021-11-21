@@ -6,7 +6,7 @@
 #include "tree.h"
 
 // Lê os argumentos do arquivo ".geo".
-void readGeoArguments(Tree *tree, FILE *geoFile) {
+void readGeoArguments(Tree tree, FILE *geoFile) {
     char trash[10], line[200];
     char cep[100], fill[50], stroke[50], thickness[50];
     double x, y, width, height;
@@ -23,6 +23,8 @@ void readGeoArguments(Tree *tree, FILE *geoFile) {
         if (strncmp(line, "cq ", 3) == 0)
             sscanf(line, "%s %s %s %s", trash, thickness, fill, stroke);
     }
+
+    printf("\nPre - Tree size: %d\n", getTreeSize(tree));
 }
 
 // Abre o arquivo ".geo" e chama função de leitura de parâmetros.

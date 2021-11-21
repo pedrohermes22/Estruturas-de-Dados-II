@@ -40,7 +40,7 @@ void drawBlocks(Tree tree, FILE *svgFile) {
 void openSvg(FILE *svgFile) {
     if (svgFile == NULL) return;
 
-    fprintf(svgFile, "<svg>");
+    fprintf(svgFile, "<svg>\n");
 }
 
 // Fecha a tag <svg> no arquivo SVG, mas não libera o ponteiro do arquivo.
