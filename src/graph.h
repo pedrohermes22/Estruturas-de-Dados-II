@@ -1,7 +1,12 @@
 #ifndef __GRAPH_H
 #define __GRAPH_H
 
+#include "list.h"
+
 typedef void* Graph;
+typedef void* Vertex;
+typedef void* AdjList;
+typedef void* Edge;
 
 Graph createGraph();
 
@@ -16,5 +21,15 @@ int deleteVertexGraph(Graph graph, char* id);
 int deleteEdgeGraph(Graph graph, char* origin, char* destiny);
 
 int getAmountVertex(Graph graph);
+
+List getAdjList(Graph graph);
+
+List getEdgeList(AdjList adjLis);
+
+char* getVertexId(AdjList adjLis);
+
+double getEdgeSize(Edge edge);
+
+double getEdgeSpeed(Edge edge);
 
 #endif

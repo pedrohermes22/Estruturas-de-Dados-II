@@ -40,7 +40,7 @@ typedef struct adjList{
     VertexStruct vertex;
     List edge;
 
-}AdjList;
+}AdjListStruct;
 
 // Cria um grapho
 Graph createGraph(){
@@ -62,7 +62,7 @@ int destroyGraph(Graph graph){
 
     // Percorre a lista de adjacência (Vértices)
     for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
-        AdjList* adjAux = (AdjList* ) getListInfo(nodeAux);
+        AdjListStruct* adjAux = (AdjListStruct* ) getListInfo(nodeAux);
 
         // Percorre a lista das Arestas
         for(NodeL nodeAux2 = getListFirst(adjAux->edge); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
@@ -93,7 +93,7 @@ int insertVertexGraph(Graph graph, char* id, double x, double y){
     }
 
     // Cria um novo nó na lista de adjacencia
-    AdjList* new = (AdjList* ) malloc(sizeof(AdjList));
+    AdjListStruct* new = (AdjListStruct* ) malloc(sizeof(AdjListStruct));
     strcpy(new->vertex.id, id);
     new->vertex.x = x;
     new->vertex.y = y;
@@ -116,12 +116,12 @@ int insertEdgeGraph(Graph graph, char* origin, char* destiny, char* cepRight, ch
         return 0;
     }
 
-    AdjList* originAdj = NULL;
-    AdjList* destinyAdj = NULL;
+    AdjListStruct* originAdj = NULL;
+    AdjListStruct* destinyAdj = NULL;
 
     // Percorre a lista e busca se as arestas de origem e destino existem e salva
     for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
-        AdjList* adjAux = (AdjList* ) getListInfo(nodeAux);
+        AdjListStruct* adjAux = (AdjListStruct* ) getListInfo(nodeAux);
 
         if(strcpy(origin, adjAux->vertex.id) == 0){
             originAdj = adjAux;
@@ -164,7 +164,7 @@ int deleteVertexGraph(Graph graph, char* id){
 
     // Percorre a lista de adjacência
     for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
-        AdjList* adjAux = (AdjList* ) getListInfo(nodeAux);
+        AdjListStruct* adjAux = (AdjListStruct* ) getListInfo(nodeAux);
 
         // Se achar o vértice, apaga suas arestas e ele mesmo
         if(strcmp(id, adjAux->vertex.id) == 0){
@@ -203,7 +203,7 @@ int deleteEdgeGraph(Graph graph, char* origin, char* destiny){
 
     // Percorre a lista de adjacência
     for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
-        AdjList* adjAux = (AdjList* ) getListInfo(nodeAux);
+        AdjListStruct* adjAux = (AdjListStruct* ) getListInfo(nodeAux);
 
         // Achou o vértice de origem, busca a aresta e deleta
         if(strcmp(adjAux->vertex.id, origin) == 0){
@@ -227,4 +227,35 @@ int getAmountVertex(Graph graph){
     GraphStruct* graphAux = (GraphStruct* ) graph;
 
     return graphAux->amountVertex;
+}
+
+List getAdjList(Graph graph){
+    GraphStruct* graphAux = (GraphStruct* ) graph;
+
+    return graphAux->adj;
+}
+
+List getEdgeList(AdjList adjLis){
+    AdjListStruct* adjLisAux = (AdjListStruct* ) adjLis;
+
+    return adjLisAux->edge;
+}
+
+char* getVertexId(AdjList adjLis){
+    AdjListStruct* adjLisAux = (AdjListStruct* ) adjLis;
+
+    return adjLisAux->vertex.id;
+}
+
+
+double getEdgeSize(Edge edge){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    return edgeAux->size;
+}
+
+double getEdgeSpeed(Edge edge){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    return edgeAux->speed;
 }
