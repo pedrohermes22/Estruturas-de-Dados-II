@@ -70,7 +70,7 @@ int cityRemovebyCep(City city, char* cep){
     int table = hashTableRemove(cityAux->table, cep);
 
     // Apaga a quadra
-    blockDelete(block);
+    destroyBlock(block);
     return tree == 0 || table == 0 ? 0 : 1;
 }
 

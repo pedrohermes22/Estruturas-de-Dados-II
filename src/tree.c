@@ -289,7 +289,7 @@ int treeInsert(Tree tree, Info info, double keyX, double keyY, double width) {
 }
 
 // Função de remoção recursiva
-int recTreeRemove(NodeStruct** root, double keyX, double keyY) {
+int recTreeRemove(TreeStruct* tree ,NodeStruct** root, double keyX, double keyY) {
     int res = 0;
     if (*root == NULL) {
         return 0;
@@ -297,7 +297,7 @@ int recTreeRemove(NodeStruct** root, double keyX, double keyY) {
 
     // Se for menor que o nó atual vai para a esquerda e balanceia se precisar
     if (keyX < (*root)->key) {
-        if ((res = recTreeRemove(&(*root)->left, keyX, keyY)) == 1) {
+        if ((res = recTreeRemove(tree ,&(*root)->left, keyX, keyY)) == 1) {
             if (nodeFactor(*root) >= 2) {
                 if (nodeHeight((*root)->right->left) <= nodeHeight((*root)->right->right)) {
                     rotateRR(root);
@@ -310,7 +310,7 @@ int recTreeRemove(NodeStruct** root, double keyX, double keyY) {
 
     // Se for maior que o nó atual vai para o nó da direita e balanceia se precisar
     if (keyX > (*root)->key) {
-        if ((res = recTreeRemove(&(*root)->right, keyX, keyY)) == 1) {
+        if ((res = recTreeRemove(tree, &(*root)->right, keyX, keyY)) == 1) {
             if (nodeFactor(*root) >= 2) {
                 if (nodeHeight((*root)->left->right) <= nodeHeight((*root)->left->left)) {
                     rotateLL(root);
@@ -343,7 +343,14 @@ int recTreeRemove(NodeStruct** root, double keyX, double keyY) {
                 (*root) = (*root)->right;
             }
 
-            // endList(oldNode->list);
+            if(getListSize(oldNode->list) == 1){
+                NodeL nodeAux = getListFirst(oldNode->list);
+                Item* item = (Item*)getListInfo(nodeAux);
+                free(item);
+            }
+            
+            tree->size--;
+            endList(oldNode->list);
             free(oldNode);
         } else {
             NodeStruct* temp = searchLesser((*root)->right);
@@ -356,7 +363,7 @@ int recTreeRemove(NodeStruct** root, double keyX, double keyY) {
             (*root)->biggerX = big != NULL ? big->key + big->widthBlock : (*root)->key + (*root)->widthBlock;
             (*root)->lesserX = small != NULL ? small->key : (*root)->key;
 
-            recTreeRemove(&(*root)->right, (*root)->key, FLAG_STOP_REMOVE);
+            recTreeRemove(tree ,&(*root)->right, (*root)->key, FLAG_STOP_REMOVE);
             if (nodeFactor(*root) >= 2) {
                 if (nodeHeight((*root)->left->right) <= nodeHeight((*root)->left->left)) {
                     rotateLL(root);
@@ -380,11 +387,7 @@ int recTreeRemove(NodeStruct** root, double keyX, double keyY) {
 // Chama a função recursiva de remover
 int treeRemove(Tree tree, double keyX, double keyY) {
     TreeStruct* treeAux = (TreeStruct*)tree;
-    int aux = recTreeRemove(&(treeAux->root), keyX, keyY);
-
-    if (aux == 1) {
-        treeAux->size--;
-    }
+    int aux = recTreeRemove(treeAux, &(treeAux->root), keyX, keyY);
 
     return aux;
 }

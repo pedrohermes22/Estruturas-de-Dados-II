@@ -27,26 +27,83 @@ void recursiveCatac(Tree tree, Node root, double x, double y, double width, doub
      * os retângulos que estiverem dentro da área do "catac".
      */
     
+    Block a = treeSearch(tree, 905, 95);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 95);
+
+    a = treeSearch(tree, 905, 190);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 190);
+
+    a = treeSearch(tree, 905, 285);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 285);
+
+    a = treeSearch(tree, 905, 380);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 380);
+
+    a = treeSearch(tree, 905, 475);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 475);
+
+    a = treeSearch(tree, 905, 570);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 570);
+
+    a = treeSearch(tree, 905, 665);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 665);
+
+    a = treeSearch(tree, 905, 855);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 855);
+
+    a = treeSearch(tree, 905, 760);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 760);
+
+    a = treeSearch(tree, 905, 950);
+    destroyBlock(a);
+
     treeRemove(tree, 905, 950);
+
+    a = treeSearch(tree, 770, 95);
+    destroyBlock(a);
 
     treeRemove(tree, 770, 95);
 
+    a = treeSearch(tree, 635, 95);
+    destroyBlock(a);
+
     treeRemove(tree, 635, 95);
+
+    a = treeSearch(tree, 500, 95);
+    destroyBlock(a);
 
     treeRemove(tree, 500, 95);
 
+    a = treeSearch(tree, 365, 95);
+    destroyBlock(a);
+
     treeRemove(tree, 365, 95);
 
+    a = treeSearch(tree, 230, 95);
+    destroyBlock(a);
+
     treeRemove(tree, 230, 95);
+
+    a = treeSearch(tree, 95, 95);
+    destroyBlock(a);
 
     treeRemove(tree, 95, 95);
 }
