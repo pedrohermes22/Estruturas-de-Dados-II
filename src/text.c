@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-FILE *tempTxt = NULL;
+FILE *tempTxt = NULL;  // Armazena comandos SVG.
+FILE *outTxt = NULL;   // Armazena as saídas dos comandos do QRY.
 
 // Retorna um ponteiro para o arquivo temporário.
 FILE *getTempTxt() { return tempTxt; }
 
+// Retorna um ponteiro para o arquivo de saída.
+FILE *getOutTxt() { return outTxt; }
+
 /*
- * Cria o arquivo temporário ".txt".
- * O arquivo temporário armazenará os códigos SVG que são inseridos
- * ao final do ".svg" produzido pelas consultas.
- * Dessa forma não ocorre o problema das linhas ficarem por baixo dos
- * retângulos, ou outros objetos.
+ * Cria o arquivo temporário TXT.
+ * O arquivo temporário armazenará os códigos que são inseridos ao final do SVG produzido pelas consultas.
+ * Dessa forma não ocorre o problema das linhas ficarem por baixo dos retângulos, ou outros objetos.
  */
 void openTempTxt(char *bsd) {
     if (tempTxt == NULL) {
@@ -23,17 +25,25 @@ void openTempTxt(char *bsd) {
     }
 }
 
-// Fecha o arquivo temporário ".txt".
-void closeTempTxt() {
-    if (tempTxt != NULL) {
-        fclose(tempTxt);
-        tempTxt = NULL;
+// Cria o arquivo TXT com a saída dos comandos do QRY.
+void openOutTxt(char *bsd, char *name) {
+    if (outTxt == NULL) {
+        char *outPath = (char *)calloc(strlen(bsd) + strlen(name) + 7, sizeof(char));
+        sprintf(outPath, "%s/%s.txt", bsd, name);
+
+        outTxt = fopen(outPath, "w");
+        free(outPath);
     }
 }
 
-// Escreve linhas no arquivo temporário ".txt".
-void writeTempTxt(char *text) {
-    if (tempTxt == NULL) return;
+// Fecha o arquivo "file".
+void closeTxt(FILE *file) {
+    if (file != NULL) fclose(file);
+}
 
-    fprintf(tempTxt, text);
+// Escreve linhas no arquivo "file".
+void writeTxt(FILE *file, char *text) {
+    if (file == NULL) return;
+
+    fprintf(file, text);
 }

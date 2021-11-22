@@ -3,25 +3,26 @@
 
 #include <stdlib.h>
 
-// Retorna um ponteiro para o árquivo temporário.
+// Retorna um ponteiro para o arquivo temporário.
 FILE *getTempTxt();
 
-// Retorna o caminho do arquivo temporário.
-char *getTempPath();
+// Retorna um ponteiro para o arquivo de saída.
+FILE *getOutTxt();
 
 /*
- * Cria o arquivo temporário ".txt".
- * O arquivo temporário armazenará os códigos SVG que são inseridos
- * ao final do ".svg" produzido pelas consultas.
- * Dessa forma não ocorre o problema das linhas ficarem por baixo dos
- * retângulos, ou outros objetos.
+ * Cria o arquivo temporário TXT.
+ * O arquivo temporário armazenará os códigos que são inseridos ao final do SVG produzido pelas consultas.
+ * Dessa forma não ocorre o problema das linhas ficarem por baixo dos retângulos, ou outros objetos.
  */
 void openTempTxt(char *bsd);
 
-// Fecha o arquivo temporário ".txt", mas não o exclui.
-void closeTempTxt();
+// Cria o arquivo TXT com a saída dos comandos do QRY.
+void openOutTxt(char *bsd, char *name);
 
-// Escreve linhas no arquivo temporário ".txt".
-void writeTempTxt(char *text);
+// Fecha o arquivo "file".
+void closeTxt(FILE *file);
+
+// Escreve linhas no arquivo "file".
+void writeTxt(FILE *file, char *text);
 
 #endif

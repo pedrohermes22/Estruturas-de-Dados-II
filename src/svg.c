@@ -60,7 +60,7 @@ void drawCircle(FILE *svgFile, double x, double y, double r, char *fill) {
             x, y, r, fill);
 }
 
-// Insere as linhas do arquivo temporário no SVG. Libera o ponteiro do arquivo ".txt".
+// Insere as linhas do arquivo temporário no SVG. Libera o ponteiro do arquivo TXT.
 void insertTempTxt(FILE *tempTxt, FILE *svgFile) {
     if (tempTxt == NULL) return;
 

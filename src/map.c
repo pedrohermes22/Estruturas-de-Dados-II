@@ -7,7 +7,7 @@
 
 // Lê os argumentos do arquivo ".via".
 void readMapArguments(FILE *mapFile, Graph graph, FILE *svgFile) {
-    char command[50], line[200], trash[10];
+    char /*command[50],*/ line[200], trash[10];
     char id[100], name[100], cepRight[100], cepLeft[100], i[100], j[100];
     int vertex;
     double x, y, length, speed;
@@ -21,7 +21,7 @@ void readMapArguments(FILE *mapFile, Graph graph, FILE *svgFile) {
         // Comando "v".
         if (strncmp(line, "v ", 2) == 0) {
             sscanf(line, "%s %s %lf %lf", trash, id, &x, &y);
-            drawCircle(svgFile, x - 2, y - 1, 4, "red");  // << Desenha os círculos.
+            drawCircle(svgFile, x - 2, y - 1, 5, "red");  // Desenha os círculos.
             insertVertexGraph(graph, id, x, y);
         }
 

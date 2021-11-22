@@ -69,6 +69,7 @@ void mapCommands(Graph graph, FILE *svgFile, char *bed, char *bsd, char *mapName
 
 // Executa comandos referentes ao ".qry".
 void qryCommands(Tree tree, Graph graph, char *bed, char *bsd, char *qryName) {
+    char *qName = extractName(qryName);
     char *qryPath = catPath(bed, qryName);
     char *svgPath = getSvgPath(bsd, qryName);
     char dir[200];  // Diretório do arquivo ".txt" temporário.
@@ -77,13 +78,17 @@ void qryCommands(Tree tree, Graph graph, char *bed, char *bsd, char *qryName) {
     sprintf(dir, "%s/TEMP_TXT.txt", bsd);
 
     openTempTxt(bsd);
+    openOutTxt(bsd, qName);
     openSvg(svgFile);
     openQry(tree, qryPath);
     drawBlocks(tree, svgFile);
-    closeTempTxt();
+    closeTxt(getTempTxt());
+    closeTxt(getOutTxt());
     insertTempTxt(fopen(dir, "r"), svgFile);
     closeSvg(svgFile);
+    remove(dir);
 
+    free(qName);
     free(qryPath);
     free(svgPath);
     fclose(svgFile);
