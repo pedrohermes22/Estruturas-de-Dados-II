@@ -20,6 +20,12 @@ int deleteVertexGraph(Graph graph, char* id);
 
 int deleteEdgeGraph(Graph graph, char* origin, char* destiny);
 
+double getVertexX(AdjList adjLis);
+
+double getVertexY(AdjList adjLis);
+
+char* getVertexId(AdjList adjLis);
+
 int getAmountVertex(Graph graph);
 
 List getAdjList(Graph graph);

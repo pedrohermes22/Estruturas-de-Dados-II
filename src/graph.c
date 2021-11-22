@@ -223,6 +223,24 @@ int deleteEdgeGraph(Graph graph, char* origin, char* destiny){
     return 0;
 }
 
+double getVertexX(AdjList adjLis){
+    AdjListStruct* adjLisAux = (AdjListStruct* ) adjLis;
+
+    return adjLisAux->vertex.x;
+}
+
+double getVertexY(AdjList adjLis){
+    AdjListStruct* adjLisAux = (AdjListStruct* ) adjLis;
+
+    return adjLisAux->vertex.y;
+}
+
+char* getVertexId(AdjList adjLis){
+    AdjListStruct* adjLisAux = (AdjListStruct* ) adjLis;
+
+    return adjLisAux->vertex.id;
+}
+
 int getAmountVertex(Graph graph){
     GraphStruct* graphAux = (GraphStruct* ) graph;
 
