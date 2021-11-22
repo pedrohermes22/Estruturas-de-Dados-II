@@ -6,6 +6,7 @@
 #include "block.h"
 #include "geo.h"
 #include "graph.h"
+#include "hashtable.h"
 #include "map.h"
 #include "path.h"
 #include "qry.h"
@@ -35,11 +36,11 @@ int verify(char *bed, char *geoName, char *bsd, char *qryName, char *mapName) {
 }
 
 // Executa comandos referentes ao ".geo".
-int geoCommands(Tree tree, FILE *svgFile, char *bed, char *bsd, char *geoName) {
+int geoCommands(Tree tree, HashTable *hash, FILE *svgFile, char *bed, char *bsd, char *geoName) {
     char *geoPath = catPath(bed, geoName);
     char *originalSvgPath = getSvgPath(bsd, geoName);
 
-    if (!openGeo(tree, geoPath)) {
+    if (!openGeo(tree, hash, geoPath)) {
         free(geoPath);
         return 0;
     }
@@ -68,7 +69,7 @@ void mapCommands(Graph graph, FILE *svgFile, char *bed, char *bsd, char *mapName
 }
 
 // Executa comandos referentes ao ".qry".
-void qryCommands(Tree tree, Graph graph, char *bed, char *bsd, char *qryName) {
+void qryCommands(Tree tree, HashTable hash, Graph graph, char *bed, char *bsd, char *qryName) {
     char *qName = extractName(qryName);
     char *qryPath = catPath(bed, qryName);
     char *svgPath = getSvgPath(bsd, qryName);
@@ -80,7 +81,7 @@ void qryCommands(Tree tree, Graph graph, char *bed, char *bsd, char *qryName) {
     openTempTxt(bsd);
     openOutTxt(bsd, qName);
     openSvg(svgFile);
-    openQry(tree, qryPath);
+    openQry(tree, hash, qryPath);
     drawBlocks(tree, svgFile);
     closeTxt(getTempTxt());
     closeTxt(getOutTxt());
@@ -98,6 +99,7 @@ void qryCommands(Tree tree, Graph graph, char *bed, char *bsd, char *qryName) {
 void readParameters(Tree tree, int argc, char *argv[]) {
     char *bed = NULL, *geoName = NULL, *bsd = NULL, *qryName = NULL, *mapName = NULL;
     Graph graph = createGraph();
+    HashTable hash = NULL;
 
     for (int i = 1; i < argc; i++) {
         // Diretório-base de entrada (BED).
@@ -138,9 +140,9 @@ void readParameters(Tree tree, int argc, char *argv[]) {
     char *svgPath = getSvgPath(bsd, geoName);
     FILE *svgFile = fopen(svgPath, "w");
 
-    if (!geoCommands(tree, svgFile, bed, bsd, geoName)) return;
+    if (!geoCommands(tree, &hash, svgFile, bed, bsd, geoName)) return;
     if (mapName != NULL) mapCommands(graph, svgFile, bed, bsd, mapName);
-    if (qryName != NULL) qryCommands(tree, graph, bed, bsd, qryName);
+    if (qryName != NULL) qryCommands(tree, hash, graph, bed, bsd, qryName);
 
     // Fecha o SVG aberto anteriormente.
     closeSvg(svgFile);
@@ -149,6 +151,7 @@ void readParameters(Tree tree, int argc, char *argv[]) {
     freeAll(bed, geoName, bsd, qryName, mapName);
     free(svgPath);
     destroyGraph(graph);
+    hashTableEnd(hash);
 }
 
 int main(int argc, char *argv[]) {

@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#include "block.h"
+
 /*
  * Retorna o caminho para o SVG com o nome correto, de acordo com o parâmetro "name".
  * Necessário desalocar a memória após usar essa função.
@@ -15,51 +17,54 @@ char *getSvgPath(char *bsd, char *name) {
 
     free(svgName);
     free(newName);
-    
+
     return svgPath;
 }
 
 // Retorna a coordenada X do registrador.
-// double getXCoordinate(char face, int number, double x) {
-//     switch (face) {
-//         case 'S':
-//             return x + number;
+double getXCoordinate(char face, int number, Block block) {
+    if (block == NULL) return -1;
 
-//         case 'N':
-//             return x + number;
+    double x = getBlockX(block);
 
-//         case 'L':
-//             return x + (number / 2);
+    switch (face) {
+        case 'S':
+            return x + number;
 
-//         case 'O':
-//             return x + getW(cityBlock) - (number / 2);
+        case 'N':
+            return x + number;
 
-//         default:
-//             return -1;
-//     }
-// }
+        case 'L':
+            return x + (number / 2);
+
+        case 'O':
+            return x + getBlockWidth(block) - (number / 2);
+
+        default:
+            return -1;
+    }
+}
 
 // Retorna a coordenada Y do registrador.
-// double getYCoordinate(char face, int number, void *cityBlock) {
-//     if (cityBlock == NULL)
-//         return -1;
+double getYCoordinate(char face, int number, Block block) {
+    if (block == NULL) return -1;
 
-//     double y = getY(cityBlock);
+    double y = getBlockY(block);
 
-//     switch (face) {
-//         case 'S':
-//             return y + (number / 2);
+    switch (face) {
+        case 'S':
+            return y + (number / 2);
 
-//         case 'N':
-//             return y + getH(cityBlock) - (number / 2);
+        case 'N':
+            return y + getBlockHeight(block) - (number / 2);
 
-//         case 'L':
-//             return y + number;
+        case 'L':
+            return y + number;
 
-//         case 'O':
-//             return y + number;
+        case 'O':
+            return y + number;
 
-//         default:
-//             return -1;
-//     }
-// }
+        default:
+            return -1;
+    }
+}

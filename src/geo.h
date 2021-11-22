@@ -2,8 +2,9 @@
 #define _GEO_H_
 
 #include "tree.h"
+#include "hashtable.h"
 
-// Abre o arquivo ".geo" e chama função de leitura de parâmetros.
-int openGeo(Tree *tree, char geoPath[]);
+// Abre o arquivo GEO e chama função de leitura de parâmetros.
+int openGeo(Tree tree, HashTable hash, char *geoPath);
 
 #endif

@@ -3,16 +3,39 @@
 #include <string.h>
 
 #include "block.h"
+#include "hashtable.h"
 #include "list.h"
 #include "text.h"
 #include "tree.h"
+#include "utils.h"
 
 // Executa comando "@o?".
-void oCommand(char *cep, char face, int number) {
+void oCommand(HashTable hash, char *cep, char face, int number) {
+    if (hash == NULL) return;
+
+    Block block = hashTableSearch(hash, cep);  // Recupera a quadra cujo a chave é "cep".
+
+    if (block == NULL) return;
+
+    double x = getXCoordinate(face, number, block);
+    double y = getYCoordinate(face, number, block);
+    char line[200];
+
+    // Imprime a linha vertical.
+    sprintf(line,
+            "\t<line x1='%lf' y1='%lf' x2='%lf' y2='-10' stroke-width='5' stroke='red'/>\n",
+            x, y, x);
+    writeTxt(getTempTxt(), line);  // Escreve o código no TXT temporário.
+
+    // Escreve o CEP da quadra no topo da linha.
+    sprintf(line,
+            "\t<text x='%lf' y='-10' font-size='12' font-weight='bold' fill='black'>%s</text>\n",
+            x + 5, cep);
+    writeTxt(getTempTxt(), line);  // Escreve o código no TXT temporário.
 }
 
 // Função recursiva do "catac".
-void recursiveCatac(Tree tree, Node root, double x, double y, double width, double height) {
+void recursiveCatac(Tree tree, Node root, HashTable hash, double x, double y, double width, double height) {
     if (root == NULL) return;
 
     List list = getTreeNodeItens(root);  // Lista com as quadras.
@@ -38,15 +61,16 @@ void recursiveCatac(Tree tree, Node root, double x, double y, double width, doub
 
             destroyBlock(block);
             treeRemove(tree, xB, yB);
+            hashTableRemove(hash, getBlockCep(block));
         }
     }
 
-    recursiveCatac(tree, getTreeRight(root), x, y, width, height);  // Executa função para o nó direito.
-    recursiveCatac(tree, getTreeLeft(root), x, y, width, height);   // Executa função para o nó esquerdo.
+    recursiveCatac(tree, getTreeRight(root), hash, x, y, width, height);  // Executa função para o nó direito.
+    recursiveCatac(tree, getTreeLeft(root), hash, x, y, width, height);   // Executa função para o nó esquerdo.
 }
 
 // Executa comando "catac".
-void catacCommand(Tree tree, double x, double y, double width, double height) {
+void catacCommand(Tree tree, HashTable hash, double x, double y, double width, double height) {
     char rect[200];
 
     // Desenha o retângulo com a área do catac.
@@ -55,7 +79,7 @@ void catacCommand(Tree tree, double x, double y, double width, double height) {
             x, y, width, height);
     writeTxt(getTempTxt(), rect);
 
-    recursiveCatac(tree, getTreeRoot(tree), x, y, width, height);  // Chama função recursiva do catac.
+    recursiveCatac(tree, getTreeRoot(tree), hash, x, y, width, height);  // Chama função recursiva do catac.
 }
 
 // Executa comando "rv".
@@ -71,7 +95,7 @@ void pCommand(char *cep, char face, int number, char *shortest, char *fastest) {
 }
 
 // Lê os argumentos do arquivo QRY e executa os comandos.
-void readQryArguments(Tree tree, FILE *qryFile) {
+void readQryArguments(Tree tree, HashTable hash, FILE *qryFile) {
     char line[200], trash[10], message[250], limiar[100];  // << Corrigir o "limiar".
     char cep[100], face, shortest[50], fastest[50];
     int number;
@@ -80,6 +104,7 @@ void readQryArguments(Tree tree, FILE *qryFile) {
     while (fgets(line, sizeof(line), qryFile) != NULL) {
         if (strncmp(line, "@o? ", 4) == 0) {
             sscanf(line, "%s %s %c %d", trash, cep, &face, &number);
+            oCommand(hash, cep, face, number);
         }
 
         if (strncmp(line, "catac ", 6) == 0) {
@@ -87,7 +112,7 @@ void readQryArguments(Tree tree, FILE *qryFile) {
             writeTxt(getOutTxt(), message);
 
             sscanf(line, "%s %lf %lf %lf %lf", trash, &x, &y, &width, &height);
-            catacCommand(tree, x, y, width, height);
+            catacCommand(tree, hash, x, y, width, height);
         }
 
         if (strncmp(line, "rv ", 3) == 0) {
@@ -105,11 +130,11 @@ void readQryArguments(Tree tree, FILE *qryFile) {
 }
 
 // Abre o arquivo QRY e chama função de leitura de parâmetros.
-void openQry(Tree tree, char *qryPath) {
+void openQry(Tree tree, HashTable hash, char *qryPath) {
     FILE *qryFile = fopen(qryPath, "r");
 
     if (qryFile == NULL) return;
 
-    readQryArguments(tree, qryFile);
+    readQryArguments(tree, hash, qryFile);
     fclose(qryFile);
 }
