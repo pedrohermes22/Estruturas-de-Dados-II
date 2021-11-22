@@ -23,8 +23,6 @@ void readGeoArguments(Tree tree, FILE *geoFile) {
         if (strncmp(line, "cq ", 3) == 0)
             sscanf(line, "%s %s %s %s", trash, thickness, fill, stroke);
     }
-
-    printf("\nPre - Tree size: %d\n", getTreeSize(tree));
 }
 
 // Abre o arquivo ".geo" e chama função de leitura de parâmetros.

@@ -13,26 +13,42 @@ void oCommand(char *cep, char face, int number) {
 
 // Função recursiva do "catac".
 void recursiveCatac(Tree tree, Node root, double x, double y, double width, double height) {
+    /* As remoções abaixo são testes pra ver como a árvore se comporta quando os elementos
+     * são removidos.
+     * A remoção não tá dando problema na hora de produzir o SVG, mas o TreeSize fica negativo.
+     * Mostra que tem 10 nós na árvore, e tá certo, tem 10 listas. Porém, quando se remove um
+     * retângulo da árvore (que está armazenado em uma lista) o TreeSize diminui como se uma
+     * lista tivesse sido removida. Com essa lógica, se restasse só um retângulo na árvore, o
+     * TreeSize ficaria -89.
+     * Tem que arrumar a forma como o TreeSize é decrementado. Acredito que isso não vá
+     * interferir no funcionamento do projeto, mas é bom deixar certinho.
+     * 
+     * Estou estudando a forma como você implementou a árvore pra saber a melhor forma de remover
+     * os retângulos que estiverem dentro da área do "catac".
+     */
+    
     treeRemove(tree, 905, 95);
-    // if (root == NULL) return;
+    treeRemove(tree, 905, 190);
+    treeRemove(tree, 905, 285);
+    treeRemove(tree, 905, 380);
+    treeRemove(tree, 905, 475);
+    treeRemove(tree, 905, 570);
+    treeRemove(tree, 905, 665);
+    treeRemove(tree, 905, 855);
+    treeRemove(tree, 905, 760);
+    treeRemove(tree, 905, 950);
 
-    // List list = getTreeNodeItens(root);
-    // NodeL pointer = getListFirst(list);
+    treeRemove(tree, 770, 95);
 
-    // while (pointer != NULL) {
-    //     double xB = getBlockX(getListInfo(pointer));
-    //     double yB = getBlockY(getListInfo(pointer));
-    //     double x2B = xB + getBlockWidth(getListInfo(pointer));
-    //     double y2B = yB + getBlockHeight(getListInfo(pointer));
+    treeRemove(tree, 635, 95);
 
-    //     pointer = getListNext(pointer);
+    treeRemove(tree, 500, 95);
 
-    //     if ((xB > x) && (yB > y) && (x2B < (x + width)) && (y2B < (y + height)))
-    //         treeRemove(tree, xB, yB);
-    // }
+    treeRemove(tree, 365, 95);
 
-    // recursiveCatac(tree, getTreeRight(root), x, y, width, height);
-    // recursiveCatac(tree, getTreeLeft(root), x, y, width, height);
+    treeRemove(tree, 230, 95);
+
+    treeRemove(tree, 95, 95);
 }
 
 // Executa comando "catac".
