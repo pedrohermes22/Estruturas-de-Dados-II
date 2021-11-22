@@ -13,25 +13,26 @@ void oCommand(char *cep, char face, int number) {
 
 // Função recursiva do "catac".
 void recursiveCatac(Tree tree, Node root, double x, double y, double width, double height) {
-    if (root == NULL) return;
+    treeRemove(tree, 905, 95);
+    // if (root == NULL) return;
 
-    List list = getTreeNodeItens(root);
-    NodeL pointer = getListFirst(list);
+    // List list = getTreeNodeItens(root);
+    // NodeL pointer = getListFirst(list);
 
-    while (pointer != NULL) {
-        double xB = getBlockX(getListInfo(pointer));
-        double yB = getBlockY(getListInfo(pointer));
-        double x2B = xB + getBlockWidth(getListInfo(pointer));
-        double y2B = yB + getBlockHeight(getListInfo(pointer));
+    // while (pointer != NULL) {
+    //     double xB = getBlockX(getListInfo(pointer));
+    //     double yB = getBlockY(getListInfo(pointer));
+    //     double x2B = xB + getBlockWidth(getListInfo(pointer));
+    //     double y2B = yB + getBlockHeight(getListInfo(pointer));
 
-        pointer = getListNext(pointer);
+    //     pointer = getListNext(pointer);
 
-        if ((xB > x) && (yB > y) && (x2B < (x + width)) && (y2B < (y + height)))
-            treeRemove(tree, xB, yB);
-    }
+    //     if ((xB > x) && (yB > y) && (x2B < (x + width)) && (y2B < (y + height)))
+    //         treeRemove(tree, xB, yB);
+    // }
 
-    recursiveCatac(tree, getTreeRight(root), x, y, width, height);
-    recursiveCatac(tree, getTreeLeft(root), x, y, width, height);
+    // recursiveCatac(tree, getTreeRight(root), x, y, width, height);
+    // recursiveCatac(tree, getTreeLeft(root), x, y, width, height);
 }
 
 // Executa comando "catac".
@@ -44,6 +45,7 @@ void catacCommand(Tree tree, double x, double y, double width, double height) {
             x, y, width, height);
     writeTempTxt(rect);
 
+    printf("Pre - Tree size: %d\n", getTreeSize(tree));
     recursiveCatac(tree, getTreeRoot(tree), x, y, width, height);
     printf("Pos - Tree size: %d\n", getTreeSize(tree));
 }
