@@ -6,6 +6,7 @@
 
 typedef struct nodeStruct {
     Info info;
+    int index;
     struct nodeStruct* next;
     struct nodeStruct* back;
 } NodeStruct;
@@ -54,6 +55,7 @@ void insertListElement(List list, Info info) {
         new->info = info;
         new->next = NULL;
         new->back = NULL;
+        new->index = 0;
         listAux->head = new;
         listAux->tail = new;
         listAux->size++;
@@ -61,9 +63,20 @@ void insertListElement(List list, Info info) {
         new->info = info;
         new->next = NULL;
         new->back = listAux->tail;
+        new->index = new->back->index + 1;
         listAux->tail->next = new;
         listAux->tail = new;
         listAux->size++;
+    }
+}
+
+void updateIndex(List list){
+    ListStruct* listAux = (ListStruct*)list;
+    int i = 0;
+
+    for(NodeStruct* aux = listAux->head; aux; aux = aux->next){
+        aux->index = i;
+        i++;
     }
 }
 
@@ -101,6 +114,7 @@ void removeListNode(List list, NodeL node) {
 
     free(nodeAux);
     listAux->size--;
+    updateIndex(list);
 }
 
 // Função que retorna o info do nó
@@ -136,4 +150,26 @@ int getListSize(List list) {
     ListStruct* listAux = (ListStruct*)list;
 
     return listAux->size;
+}
+
+int getListIndexOf(NodeL node){
+    NodeStruct* nodeAux = (NodeStruct*)node;
+
+    return nodeAux->index;
+}
+
+NodeL getListNodeByIndex(List list, int index){
+    ListStruct* listAux = (ListStruct*)list;
+
+    int i = 0;
+
+    for(NodeStruct* aux = listAux->head; aux; aux->next){
+        if(i == index){
+            return aux;
+        }
+        i++;
+    }
+
+    return NULL;
+
 }
