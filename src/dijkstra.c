@@ -72,7 +72,7 @@ void update(Graph graph, int* dist, int* back, int u, int v){
 int *dijstra(Graph graph, char* origin, char* destiny){
 
     int v = getAmountVertex(graph);
-    
+
     int i = 0;
     int visit[v];
     int back[v];
@@ -111,4 +111,41 @@ int *dijstra(Graph graph, char* origin, char* destiny){
         }
     }
     return dist;
+}
+
+List dijstraSize(Graph graph, char* origin, char* destiny){
+
+    int v = getAmountVertex(graph);
+
+    int visit[v];
+    int back[v];
+
+    double dist[v];
+
+    for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
+        int i = getListIndexOf(nodeAux);
+
+        visit[i] = 1;
+        dist[i] = DOUBLE_MAX;
+        back[i] = -1;
+        if (strcmp(getVertexId(getListInfo(nodeAux)), origin)) {
+            dist[i] = 0;
+        }
+    }
+
+    while(findVisit(graph, visit)){
+        int u = searchLesserDist(graph, visit, dist);
+        visit[u] = 0;
+
+        int i = 0;
+        AdjList adjU = getListInfo(getListNodeByIndex(getAdjList(graph), u));
+
+        List edgeU = getEdgeList(adjU);
+        i = 0;
+
+        for(NodeL nodeAux = getListFirst(edgeU); nodeAux; nodeAux = getListNext(nodeAux)){
+            update(graph, dist, back, u, i);
+        }
+    }
+
 }

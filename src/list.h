@@ -75,4 +75,8 @@ Pós: Um int com o valor.
 */
 int getListVisit(List list);
 
+int getListIndexOf(NodeL node);
+
+NodeL getListNodeByIndex(List list, int index);
+
 #endif
