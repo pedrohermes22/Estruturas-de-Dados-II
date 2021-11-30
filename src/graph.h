@@ -32,8 +32,6 @@ List getAdjList(Graph graph);
 
 List getEdgeList(AdjList adjLis);
 
-char* getVertexId(AdjList adjLis);
-
 double getEdgeSize(Edge edge);
 
 double getEdgeSpeed(Edge edge);

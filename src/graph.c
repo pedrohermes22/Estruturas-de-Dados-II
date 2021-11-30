@@ -259,13 +259,6 @@ List getEdgeList(AdjList adjLis){
     return adjLisAux->edge;
 }
 
-char* getVertexId(AdjList adjLis){
-    AdjListStruct* adjLisAux = (AdjListStruct* ) adjLis;
-
-    return adjLisAux->vertex.id;
-}
-
-
 double getEdgeSize(Edge edge){
     EdgeStruct* edgeAux = (EdgeStruct* ) edge;
 

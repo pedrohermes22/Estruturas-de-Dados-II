@@ -9,8 +9,15 @@
 #include "tree.h"
 #include "utils.h"
 
+typedef struct r {
+    char cep[100];
+    char face;
+    int number;
+    double x, y;
+} Register_R;
+
 // Executa comando "@o?".
-void oCommand(HashTable hash, char *cep, char face, int number) {
+void oCommand(Register_R *r, HashTable hash, char *cep, char face, int number) {
     if (hash == NULL) return;
 
     Block block = hashTableSearch(hash, cep);  // Recupera a quadra cujo a chave é "cep".
@@ -20,6 +27,12 @@ void oCommand(HashTable hash, char *cep, char face, int number) {
     double x = getXCoordinate(face, number, block);
     double y = getYCoordinate(face, number, block);
     char line[200];
+
+    strcpy(r->cep, cep);
+    r->face = face;
+    r->number = number;
+    r->x = x;
+    r->y = y;
 
     // Imprime a linha vertical.
     sprintf(line,
@@ -100,11 +113,12 @@ void readQryArguments(Tree tree, HashTable hash, FILE *qryFile) {
     char cep[100], face, shortest[50], fastest[50];
     int number;
     double x, y, width, height, factor;
+    Register_R r;  // Armazena o ponto informado pelo comando "@o?".
 
     while (fgets(line, sizeof(line), qryFile) != NULL) {
         if (strncmp(line, "@o? ", 4) == 0) {
             sscanf(line, "%s %s %c %d", trash, cep, &face, &number);
-            oCommand(hash, cep, face, number);
+            oCommand(&r, hash, cep, face, number);
         }
 
         if (strncmp(line, "catac ", 6) == 0) {
@@ -127,6 +141,9 @@ void readQryArguments(Tree tree, HashTable hash, FILE *qryFile) {
             sscanf(line, "%s %s %c %d %s %s", trash, cep, &face, &number, shortest, fastest);
         }
     }
+
+    printf("CEP: %s\n", r.cep);
+    printf("X = %lf; Y = %lf\n\n", r.x, r.y);
 }
 
 // Abre o arquivo QRY e chama função de leitura de parâmetros.
