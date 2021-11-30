@@ -59,19 +59,16 @@ void drawCircle(FILE *svgFile, double x, double y, double r, char *fill) {
 }
 
 // Desenha os pontos do grafo.
-void drawDots(FILE *svgFile, Graph graph) {
-    if ((svgFile == NULL) || (graph == NULL)) return;
+void drawDots(Graph graph, FILE *svgFile) {
+    if ((graph == NULL) || (svgFile == NULL)) return;
 
     AdjList adjList = getAdjList(graph);
-    List listAux = createList();
 
     for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
         AdjList vertexAux = getListInfo(nodeAux);
 
         double x = getVertexX(vertexAux);
         double y = getVertexY(vertexAux);
-
-        // x - 2, y - 1, 5, "red"
 
         fprintf(svgFile,
                 "\t<circle cx='%lf' cy='%lf' r='5' fill='red'/>\n",

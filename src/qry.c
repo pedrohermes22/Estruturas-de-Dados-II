@@ -69,13 +69,14 @@ void recursiveCatac(Tree tree, Node root, HashTable hash, double x, double y, do
         // Se a quadra estiver inteiramente contida no retângulo do catac.
         if ((xB > x) && (yB > y) && (x2B < (x + width)) && (y2B < (y + height))) {
             char message[200];
+            char *cep = getBlockCep(block);
 
-            sprintf(message, "Quadra '%s' removida.\n", getBlockCep(block));
+            sprintf(message, "Quadra '%s' removida.\n", cep);
             writeTxt(getOutTxt(), message);
 
-            destroyBlock(block);
             treeRemove(tree, xB, yB);
-            hashTableRemove(hash, getBlockCep(block));
+            hashTableRemove(hash, cep);
+            destroyBlock(block);
         }
     }
 
@@ -91,31 +92,29 @@ void catacCommand(Tree tree, HashTable hash, Graph graph, double x, double y, do
     sprintf(rect,
             "\t<rect x='%lf' y='%lf' width='%lf' height='%lf' fill='#AB37C8' stroke='#AA0044' stroke-width='3' stroke-dasharray='2' fill-opacity='0.5'/>\n",
             x, y, width, height);
-    writeTxt(getTempTxt(), rect);
-    recursiveCatac(tree, getTreeRoot(tree), hash, x, y, width, height);  // Chama função recursiva do catac.
+    writeTxt(getTempTxt(), rect);                                        // Insere "rect" no TXT temporário.
+    recursiveCatac(tree, getTreeRoot(tree), hash, x, y, width, height);  // Deleta as quadras.
 
-    AdjList adjList = getAdjList(graph);
+    deleteVertexGraph(graph, "(b0|2,6)");
+    // AdjList adjList = getAdjList(graph);
+    // List listAux = createList();  // Lista com os pontos internos.
 
-    List listAux = createList();
+    // for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
+    //     AdjList vertexAux = getListInfo(nodeAux);
 
-    for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
-        AdjList vertexAux = getListInfo(nodeAux);
+    //     double xAux = getVertexX(vertexAux);
+    //     double yAux = getVertexY(vertexAux);
 
-        double xAux = getVertexX(vertexAux);
-        double yAux = getVertexY(vertexAux);
+    //     if (((x < xAux) && ((x + width) > xAux)) && ((y < yAux) && ((y + height) > yAux)))
+    //         insertListElement(listAux, getVertexId(vertexAux));
+    // }
 
-        if ((x < xAux && (x + width) > xAux) && (y < yAux && (y + height) > yAux)) {
-            insertListElement(listAux, getVertexId(adjList));
-        }
-    }
+    // for (NodeL nodeAux = getListFirst(listAux); nodeAux; nodeAux = getListNext(nodeAux)) {
+    //     char *vertexId = getListInfo(nodeAux);
+    //     deleteVertexGraph(graph, vertexId);
+    // }
 
-    for (NodeL nodeAux = getListFirst(listAux); nodeAux; nodeAux = getListNext(nodeAux)) {
-        char *vertexId = getListInfo(nodeAux);
-
-        deleteVertexGraph(graph, vertexId);
-    }
-
-    endList(listAux);
+    // endList(listAux);
 }
 
 // Executa comando "rv".

@@ -78,17 +78,17 @@ void qryCommands(Tree tree, HashTable hash, Graph graph, char *bed, char *bsd, c
 
     sprintf(dir, "%s/TEMP_TXT.txt", bsd);  // Recebe o diretório do TXT temporário.
 
-    // == Abrindo arquivos. ==
+    // == Abertura de arquivos ==
     openTempTxt(bsd);
     openOutTxt(bsd, qName);
     openSvg(svgFile);
     openQry(tree, hash, graph, qryPath);
-    // == Fim da abertura de arquivos. ==
+    // == Fim da abertura de arquivos ==
 
-    drawBlocks(tree, svgFile);  // Desenha as quadras.
-    drawDots(svgFile, graph);
-    closeTxt(getTempTxt());     // Fecha o TXT temporário.
-    closeTxt(getOutTxt());      // Fecha o TXT de saída.
+    drawBlocks(tree, svgFile);
+    drawDots(graph, svgFile);
+    closeTxt(getTempTxt());  // Fecha o TXT temporário.
+    closeTxt(getOutTxt());   // Fecha o TXT de saída.
     insertTempTxt(fopen(dir, "r"), svgFile);
     closeSvg(svgFile);
     remove(dir);

@@ -28,8 +28,11 @@ void drawBlocks(Tree tree, FILE *svgFile);
  * char *fill: Cor do preenchimento. */
 void drawCircle(FILE *svgFile, double x, double y, double r, char *fill);
 
-// Desenha os pontos do grafo.
-void drawDots(FILE *svgFile, Graph graph);
+/* Desenha os pontos do grafo.
+ *
+ * Graph graph: Grafo com as informações.
+ * FIEL *svgFile: SVG alvo. */
+void drawDots(Graph graph, FILE *svgFile);
 
 /* Insere as linhas do TXT temporário no SVG.
  *
