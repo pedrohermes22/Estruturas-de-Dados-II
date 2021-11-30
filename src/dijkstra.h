@@ -3,5 +3,8 @@
 
 #include "graph.h"
 
+List dijkstraSize(Graph graph, char* origin, char* destiny);
+
+List dijkstraSpeed(Graph graph, char* origin, char* destiny);
 
 #endif
