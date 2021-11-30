@@ -96,25 +96,25 @@ void catacCommand(Tree tree, HashTable hash, Graph graph, double x, double y, do
     recursiveCatac(tree, getTreeRoot(tree), hash, x, y, width, height);  // Deleta as quadras.
 
     deleteVertexGraph(graph, "(b0|2,6)");
-    // AdjList adjList = getAdjList(graph);
-    // List listAux = createList();  // Lista com os pontos internos.
+    AdjList adjList = getAdjList(graph);
+    List listAux = createList();  // Lista com os pontos internos.
 
-    // for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
-    //     AdjList vertexAux = getListInfo(nodeAux);
+    for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
+        AdjList vertexAux = getListInfo(nodeAux);
 
-    //     double xAux = getVertexX(vertexAux);
-    //     double yAux = getVertexY(vertexAux);
+        double xAux = getVertexX(vertexAux);
+        double yAux = getVertexY(vertexAux);
 
-    //     if (((x < xAux) && ((x + width) > xAux)) && ((y < yAux) && ((y + height) > yAux)))
-    //         insertListElement(listAux, getVertexId(vertexAux));
-    // }
+        if (((x < xAux) && ((x + width) > xAux)) && ((y < yAux) && ((y + height) > yAux)))
+            insertListElement(listAux, getVertexId(vertexAux));
+    }
 
-    // for (NodeL nodeAux = getListFirst(listAux); nodeAux; nodeAux = getListNext(nodeAux)) {
-    //     char *vertexId = getListInfo(nodeAux);
-    //     deleteVertexGraph(graph, vertexId);
-    // }
+    for (NodeL nodeAux = getListFirst(listAux); nodeAux; nodeAux = getListNext(nodeAux)) {
+        char *vertexId = getListInfo(nodeAux);
+        deleteVertexGraph(graph, vertexId);
+    }
 
-    // endList(listAux);
+    endList(listAux);
 }
 
 // Executa comando "rv".

@@ -162,20 +162,15 @@ int deleteVertexGraph(Graph graph, char* id){
         return 0;
     }
 
+    NodeL back = NULL;
+
     // Percorre a lista de adjacência
     for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
         AdjListStruct* adjAux = (AdjListStruct* ) getListInfo(nodeAux);
 
         // Se achar o vértice, apaga suas arestas e ele mesmo
         if(strcmp(id, adjAux->vertex.id) == 0){
-            for(NodeL nodeAux2 = getListFirst(adjAux->edge); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
-                EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux2);
-
-                free(edge);
-            }
-            endList(adjAux->edge);
-            free(adjAux);
-            graphAux->amountVertex--;
+            back = nodeAux;
 
         }else{
             // Se não, busca arestas que tem o vértice como destino e também apaga
@@ -188,6 +183,19 @@ int deleteVertexGraph(Graph graph, char* id){
                 }
             } 
         }
+    }
+    if(back != NULL){
+        AdjListStruct* adjAux = (AdjListStruct* ) getListInfo(back);
+
+        for(NodeL nodeAux2 = getListFirst(adjAux->edge); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
+            EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux2);
+
+            free(edge);
+        }
+        endList(adjAux->edge);
+        free(adjAux);
+        graphAux->amountVertex--;
+        removeListNode(graphAux->adj, back);
     }
 
     return 1;
