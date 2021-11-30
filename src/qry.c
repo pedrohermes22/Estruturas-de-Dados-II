@@ -143,6 +143,20 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
     List speed = dijkstraSpeed(graph, vertexR, vertexP);
 
     List size = dijkstraSize(graph, vertexR, vertexP);
+
+    for(NodeL nodeAux = getListFirst(speed); nodeAux; nodeAux = getListNext(nodeAux)){
+        AdjList aux = getListInfo(nodeAux);
+
+        printf("%s  ", getVertexId(aux));
+    }
+
+    printf("alo");
+
+    for(NodeL nodeAux = getListFirst(size); nodeAux; nodeAux = getListNext(nodeAux)){
+        AdjList aux = getListInfo(nodeAux);
+
+        printf("%s  ", getVertexId(aux));
+    }
 }
 
 // Lê os argumentos do arquivo QRY e executa os comandos.
@@ -177,6 +191,7 @@ void readQryArguments(Tree tree, HashTable hash, Graph graph, FILE *qryFile) {
 
         if (strncmp(line, "p? ", 3) == 0) {
             sscanf(line, "%s %s %c %d %s %s", trash, cep, &face, &number, shortest, fastest);
+            pCommand(r, graph, hash, cep, face, number, shortest, fastest);
         }
     }
 }

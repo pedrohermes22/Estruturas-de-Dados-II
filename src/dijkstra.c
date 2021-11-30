@@ -188,6 +188,7 @@ List dijkstraSize(Graph graph, char* origin, char* destiny){
     if(back[dest] > 0){
         for(int i = back[dest]; dist[i] == 0; i = back[i]){
             AdjList adj = getListInfo(getListNodeByIndex(getAdjList(graph), i));
+            printf("%s", getVertexId(adj));
             insertListElement(dijkstra, adj);
 
         }
