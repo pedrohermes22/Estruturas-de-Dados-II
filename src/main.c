@@ -68,23 +68,27 @@ void mapCommands(Graph graph, FILE *svgFile, char *bed, char *bsd, char *mapName
     free(mapPath);
 }
 
-// Executa comandos referentes ao ".qry".
+// Executa os comandos do QRY.
 void qryCommands(Tree tree, HashTable hash, Graph graph, char *bed, char *bsd, char *qryName) {
-    char *qName = extractName(qryName);
-    char *qryPath = catPath(bed, qryName);
-    char *svgPath = getSvgPath(bsd, qryName);
-    char dir[200];  // Diretório do arquivo ".txt" temporário.
-    FILE *svgFile = fopen(svgPath, "w");
+    char *qName = extractName(qryName);        // Nome do QRY.
+    char *qryPath = catPath(bed, qryName);     // Diretório do QRY.
+    char *svgPath = getSvgPath(bsd, qryName);  // Diretório do SVG.
+    char dir[200];                             // Diretório do TXT temporário.
+    FILE *svgFile = fopen(svgPath, "w");       // Ponteiro do SVG.
 
-    sprintf(dir, "%s/TEMP_TXT.txt", bsd);
+    sprintf(dir, "%s/TEMP_TXT.txt", bsd);  // Recebe o diretório do TXT temporário.
 
+    // == Abrindo arquivos. ==
     openTempTxt(bsd);
     openOutTxt(bsd, qName);
     openSvg(svgFile);
-    openQry(tree, hash, qryPath);
-    drawBlocks(tree, svgFile);
-    closeTxt(getTempTxt());
-    closeTxt(getOutTxt());
+    openQry(tree, hash, graph, qryPath);
+    // == Fim da abertura de arquivos. ==
+
+    drawBlocks(tree, svgFile);  // Desenha as quadras.
+    drawDots(svgFile, graph);
+    closeTxt(getTempTxt());     // Fecha o TXT temporário.
+    closeTxt(getOutTxt());      // Fecha o TXT de saída.
     insertTempTxt(fopen(dir, "r"), svgFile);
     closeSvg(svgFile);
     remove(dir);

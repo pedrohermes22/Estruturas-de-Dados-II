@@ -10,11 +10,7 @@ FILE *getTempTxt() { return tempTxt; }
 // Retorna um ponteiro para o arquivo de saída.
 FILE *getOutTxt() { return outTxt; }
 
-/*
- * Cria o arquivo temporário TXT.
- * O arquivo temporário armazenará os códigos que são inseridos ao final do SVG produzido pelas consultas.
- * Dessa forma não ocorre o problema das linhas ficarem por baixo dos retângulos, ou outros objetos.
- */
+// Cria o TXT temporário.
 void openTempTxt(char *bsd) {
     if (tempTxt == NULL) {
         char *tempPath = (char *)calloc(strlen(bsd) + 15, sizeof(char));

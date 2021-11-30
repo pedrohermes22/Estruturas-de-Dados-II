@@ -3,7 +3,20 @@
 #include <string.h>
 
 #include "block.h"
+#include "graph.h"
 #include "tree.h"
+
+// Abre a tag <svg>.
+void openSvg(FILE *svgFile) {
+    if (svgFile == NULL) return;
+    fprintf(svgFile, "<svg>\n");
+}
+
+// Fecha a tag <svg>.
+void closeSvg(FILE *svgFile) {
+    if (svgFile == NULL) return;
+    fprintf(svgFile, "</svg>");
+}
 
 // Desenha as quadras recursivamente.
 void recursiveDrawBlocks(FILE *svgFile, Node root) {
@@ -28,7 +41,7 @@ void recursiveDrawBlocks(FILE *svgFile, Node root) {
     recursiveDrawBlocks(svgFile, getTreeRight(root));
 }
 
-// Desenha as quadras armazenadas na árvore.
+// Desenha as quadras.
 void drawBlocks(Tree tree, FILE *svgFile) {
     if ((tree == NULL) || (svgFile == NULL)) return;
 
@@ -36,31 +49,37 @@ void drawBlocks(Tree tree, FILE *svgFile) {
     recursiveDrawBlocks(svgFile, root);
 }
 
-// Abre a tag <svg> no arquivo SVG.
-void openSvg(FILE *svgFile) {
-    if (svgFile == NULL) return;
-
-    fprintf(svgFile, "<svg>\n");
-}
-
-// Fecha a tag <svg> no arquivo SVG, mas não libera o ponteiro do arquivo.
-void closeSvg(FILE *svgFile) {
-    if (svgFile == NULL) return;
-
-    fprintf(svgFile, "</svg>");
-}
-
-// Desenha círculos no SVG.
+// Desenha círculos.
 void drawCircle(FILE *svgFile, double x, double y, double r, char *fill) {
-    if (svgFile == NULL)
-        return;
+    if (svgFile == NULL) return;
 
     fprintf(svgFile,
             "\t<circle cx='%lf' cy='%lf' r='%lf' fill='%s' stroke-width='2'/>\n",
             x, y, r, fill);
 }
 
-// Insere as linhas do arquivo temporário no SVG. Libera o ponteiro do arquivo TXT.
+// Desenha os pontos do grafo.
+void drawDots(FILE *svgFile, Graph graph) {
+    if ((svgFile == NULL) || (graph == NULL)) return;
+
+    AdjList adjList = getAdjList(graph);
+    List listAux = createList();
+
+    for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
+        AdjList vertexAux = getListInfo(nodeAux);
+
+        double x = getVertexX(vertexAux);
+        double y = getVertexY(vertexAux);
+
+        // x - 2, y - 1, 5, "red"
+
+        fprintf(svgFile,
+                "\t<circle cx='%lf' cy='%lf' r='5' fill='red'/>\n",
+                x - 2, y - 1);
+    }
+}
+
+// Insere as linhas do TXT temporário no SVG.
 void insertTempTxt(FILE *tempTxt, FILE *svgFile) {
     if (tempTxt == NULL) return;
 

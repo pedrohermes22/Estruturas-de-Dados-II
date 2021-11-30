@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "block.h"
+#include "graph.h"
 #include "hashtable.h"
 #include "list.h"
 #include "text.h"
@@ -83,7 +84,7 @@ void recursiveCatac(Tree tree, Node root, HashTable hash, double x, double y, do
 }
 
 // Executa comando "catac".
-void catacCommand(Tree tree, HashTable hash, double x, double y, double width, double height) {
+void catacCommand(Tree tree, HashTable hash, Graph graph, double x, double y, double width, double height) {
     char rect[200];
 
     // Desenha o retângulo com a área do catac.
@@ -91,8 +92,30 @@ void catacCommand(Tree tree, HashTable hash, double x, double y, double width, d
             "\t<rect x='%lf' y='%lf' width='%lf' height='%lf' fill='#AB37C8' stroke='#AA0044' stroke-width='3' stroke-dasharray='2' fill-opacity='0.5'/>\n",
             x, y, width, height);
     writeTxt(getTempTxt(), rect);
-
     recursiveCatac(tree, getTreeRoot(tree), hash, x, y, width, height);  // Chama função recursiva do catac.
+
+    AdjList adjList = getAdjList(graph);
+
+    List listAux = createList();
+
+    for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
+        AdjList vertexAux = getListInfo(nodeAux);
+
+        double xAux = getVertexX(vertexAux);
+        double yAux = getVertexY(vertexAux);
+
+        if ((x < xAux && (x + width) > xAux) && (y < yAux && (y + height) > yAux)) {
+            insertListElement(listAux, getVertexId(adjList));
+        }
+    }
+
+    for (NodeL nodeAux = getListFirst(listAux); nodeAux; nodeAux = getListNext(nodeAux)) {
+        char *vertexId = getListInfo(nodeAux);
+
+        deleteVertexGraph(graph, vertexId);
+    }
+
+    endList(listAux);
 }
 
 // Executa comando "rv".
@@ -108,7 +131,7 @@ void pCommand(char *cep, char face, int number, char *shortest, char *fastest) {
 }
 
 // Lê os argumentos do arquivo QRY e executa os comandos.
-void readQryArguments(Tree tree, HashTable hash, FILE *qryFile) {
+void readQryArguments(Tree tree, HashTable hash, Graph graph, FILE *qryFile) {
     char line[200], trash[10], message[250], limiar[100];  // << Corrigir o "limiar".
     char cep[100], face, shortest[50], fastest[50];
     int number;
@@ -126,7 +149,7 @@ void readQryArguments(Tree tree, HashTable hash, FILE *qryFile) {
             writeTxt(getOutTxt(), message);
 
             sscanf(line, "%s %lf %lf %lf %lf", trash, &x, &y, &width, &height);
-            catacCommand(tree, hash, x, y, width, height);
+            catacCommand(tree, hash, graph, x, y, width, height);
         }
 
         if (strncmp(line, "rv ", 3) == 0) {
@@ -141,17 +164,14 @@ void readQryArguments(Tree tree, HashTable hash, FILE *qryFile) {
             sscanf(line, "%s %s %c %d %s %s", trash, cep, &face, &number, shortest, fastest);
         }
     }
-
-    printf("CEP: %s\n", r.cep);
-    printf("X = %lf; Y = %lf\n\n", r.x, r.y);
 }
 
 // Abre o arquivo QRY e chama função de leitura de parâmetros.
-void openQry(Tree tree, HashTable hash, char *qryPath) {
+void openQry(Tree tree, HashTable hash, Graph graph, char *qryPath) {
     FILE *qryFile = fopen(qryPath, "r");
 
     if (qryFile == NULL) return;
 
-    readQryArguments(tree, hash, qryFile);
+    readQryArguments(tree, hash, graph, qryFile);
     fclose(qryFile);
 }
