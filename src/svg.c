@@ -74,9 +74,9 @@ void drawDots(Graph graph, FILE *svgFile) {
                 "\t<circle cx='%lf' cy='%lf' r='5' fill='red'/>\n",
                 x - 2, y - 1);
 
-        for(NodeL edgeNode = getListFirst(getEdgeList(vertexAux)); edgeNode; edgeNode = getListNext(edgeNode)){
+        for (NodeL edgeNode = getListFirst(getEdgeList(vertexAux)); edgeNode; edgeNode = getListNext(edgeNode)) {
             Edge edge = getListInfo(edgeNode);
-            AdjList origin = searchVertex(graph ,getEdgeOrigin(edge));
+            AdjList origin = searchVertex(graph, getEdgeOrigin(edge));
             AdjList destiny = searchVertex(graph, getEdgeDestiny(edge));
 
             double x1 = getVertexX(origin);
@@ -85,8 +85,8 @@ void drawDots(Graph graph, FILE *svgFile) {
             double y2 = getVertexY(destiny);
 
             fprintf(svgFile,
-                "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:black;stroke-width:1' />\n",
-                x1, y1, x2, y2);
+                    "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:black;stroke-width:1' />\n",
+                    x1, y1, x2, y2);
         }
     }
 }
