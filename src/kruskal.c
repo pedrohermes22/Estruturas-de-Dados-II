@@ -60,6 +60,23 @@ void mst(Graph graph) {
 //     }
 // }
 
+void convertDigraphForGraph(Graph graph){
+    for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
+        AdjList adj = getListInfo(nodeAux);
+
+
+        for (NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
+            Edge edge = getListInfo(nodeAux2);
+            Edge aux = searchEdge(searchVertex(graph, getEdgeDestiny(edge)), getEdgeOrigin(edge));
+
+            if(aux == NULL){
+                // TODO: conseguir o CEP em vez de "a" e "b"
+                insertEdgeGraph(graph, getEdgeDestiny(edge), getEdgeOrigin(edge), "a", "b", getEdgeSize(edge), getEdgeSpeed(edge), getEdgeName(edge));
+            }
+        }
+    }
+}
+
 int findIndexA(Graph graph, char* destiny){
     for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
 
@@ -73,6 +90,8 @@ int findIndexA(Graph graph, char* destiny){
 
 void kruskal(Graph graph) {
     if ((graph == NULL) || (getAmountVertex(graph) == 0)) return;
+
+    convertDigraphForGraph(graph);
 
     int vertices = getAmountVertex(graph);
     int orig = 0;
@@ -128,16 +147,20 @@ void kruskal(Graph graph) {
         }
     }
 
-//     printf("Vertices amount: %d\n\n", vertices);
+    // printf("Vertices amount: %d\n\n", vertices);
+    
+    for(int i = 0; i < vertices; i++){
+        printf("%d\n", pai[i]);
+    }
 
-//     FILE *svg = fopen("../graph.svg", "w");
-//     openSvg(svg);
+    FILE *svg = fopen("../graph.svg", "w");
+    openSvg(svg);
 
-//     drawDots(graph, svg);
+    drawDots(graph, svg);
 
-//     closeSvg(svg);
-//     if (svg != NULL) fclose(svg);
+    closeSvg(svg);
+    if (svg != NULL) fclose(svg);
 
-//     List adjList = getAdjList(graph);
-//     AdjList aux = getListInfo(getListFirst(adjList));  // Primeiro vértice.
+    List adjList = getAdjList(graph);
+    AdjList aux = getListInfo(getListFirst(adjList));  // Primeiro vértice.
 }
