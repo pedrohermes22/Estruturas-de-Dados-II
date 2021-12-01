@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define DOUBLE_MAX 10000000
+#define DOUBLE_MAX 100000
 #include "dijkstra.h"
 
 int findVisit(Graph graph, int* visit){
@@ -28,7 +28,7 @@ int searchLesserDist(Graph graph, int* visit, double* dist){
 
     int lesser = i;
 
-    for(i = lesser+1; i < getAmountVertex(graph); i++){
+    for(i = lesser + 1; i < getAmountVertex(graph); i++){
         if(visit[i] && (dist[lesser] > dist[i])){
             lesser = i;
         }
@@ -38,7 +38,7 @@ int searchLesserDist(Graph graph, int* visit, double* dist){
     return lesser;
 }
 
-void updateSize(Graph graph, int* dist, int* back, AdjList adjU, int u, int v){
+void updateSize(Graph graph, int* dist, int* back, AdjList adjU, int u, int v, int index){
     int i = 0;
 
     List edgeU = getEdgeList(adjU);
@@ -46,7 +46,7 @@ void updateSize(Graph graph, int* dist, int* back, AdjList adjU, int u, int v){
     Edge edgeV = NULL;
 
     for(NodeL nodeAux = getListFirst(edgeU); nodeAux; nodeAux = getListNext(nodeAux)){
-        if(v == i){
+        if(index == i){
             edgeV = getListInfo(nodeAux);
             break;
         }
@@ -62,7 +62,7 @@ void updateSize(Graph graph, int* dist, int* back, AdjList adjU, int u, int v){
 
 }
 
-void updateSpeed(Graph graph, int* dist, int* back, AdjList adjU, int u, int v){
+void updateSpeed(Graph graph, int* dist, int* back, AdjList adjU, int u, int v, int index){
     int i = 0;
 
     List edgeU = getEdgeList(adjU);
@@ -70,7 +70,7 @@ void updateSpeed(Graph graph, int* dist, int* back, AdjList adjU, int u, int v){
     Edge edgeV = NULL;
 
     for(NodeL nodeAux = getListFirst(edgeU); nodeAux; nodeAux = getListNext(nodeAux)){
-        if(v == i){
+        if(index == i){
             edgeV = getListInfo(nodeAux);
             break;
         }
@@ -84,6 +84,17 @@ void updateSpeed(Graph graph, int* dist, int* back, AdjList adjU, int u, int v){
         }
     }
 
+}
+
+int findIndex(Graph graph, char* destiny){
+    for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
+
+        if (strcmp(getVertexId(getListInfo(nodeAux)), destiny) == 0) {
+            return getListIndexOf(nodeAux);
+        }
+    }
+
+    return -1;
 }
 
 List dijkstraSpeed(Graph graph, char* origin, char* destiny){
@@ -103,12 +114,13 @@ List dijkstraSpeed(Graph graph, char* origin, char* destiny){
         visit[i] = 1;
         dist[i] = DOUBLE_MAX;
         back[i] = -1;
-        if (strcmp(getVertexId(getListInfo(nodeAux)), origin)) {
+        
+        if (strcmp(getVertexId(getListInfo(nodeAux)), origin) == 0) {
             orig = i;
             dist[i] = 0;
         }
 
-        if (strcmp(getVertexId(getListInfo(nodeAux)), destiny)) {
+        if (strcmp(getVertexId(getListInfo(nodeAux)), destiny) == 0) {
             dest = i;
         }
     }
@@ -117,22 +129,35 @@ List dijkstraSpeed(Graph graph, char* origin, char* destiny){
         int u = searchLesserDist(graph, visit, dist);
         visit[u] = 0;
 
-        int i = 0;
-        AdjList adjU = getListInfo(getListNodeByIndex(getAdjList(graph), u));
+        int index = 0;
+        AdjList adjU = NULL;
+
+        for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
+            if(getListIndexOf(nodeAux) == u){
+                adjU = getListInfo(nodeAux);
+            }
+        }
 
         List edgeU = getEdgeList(adjU);
-        i = 0;
 
         for(NodeL nodeAux = getListFirst(edgeU); nodeAux; nodeAux = getListNext(nodeAux)){
-            updateSpeed(graph, dist, back, adjU, u, i);
+            index = getListIndexOf(nodeAux);
+            int i = findIndex(graph, getEdgeDestiny(getListInfo(nodeAux)));
+            updateSpeed(graph, dist, back, adjU, u, i, index);
         }
     }
 
     List dijkstra = createList();
 
     if(back[dest] > 0){
-        for(int i = back[dest]; dist[i] == 0; i = back[i]){
-            AdjList adj = getListInfo(getListNodeByIndex(getAdjList(graph), i));
+        for(int i = back[dest]; dist[i] != 0; i = back[i]){
+            AdjList adj = NULL;
+
+            for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
+                if(getListIndexOf(nodeAux) == i){
+                    adj = getListInfo(nodeAux);
+                }
+            }
             insertListElement(dijkstra, adj);
 
         }
@@ -158,12 +183,12 @@ List dijkstraSize(Graph graph, char* origin, char* destiny){
         visit[i] = 1;
         dist[i] = DOUBLE_MAX;
         back[i] = -1;
-        if (strcmp(getVertexId(getListInfo(nodeAux)), origin)) {
+        if (strcmp(getVertexId(getListInfo(nodeAux)), origin) == 0) {
             orig = i;
             dist[i] = 0;
         }
 
-        if (strcmp(getVertexId(getListInfo(nodeAux)), destiny)) {
+        if (strcmp(getVertexId(getListInfo(nodeAux)), destiny) == 0) {
             dest = i;
         }
     }
@@ -172,23 +197,39 @@ List dijkstraSize(Graph graph, char* origin, char* destiny){
         int u = searchLesserDist(graph, visit, dist);
         visit[u] = 0;
 
-        int i = 0;
-        AdjList adjU = getListInfo(getListNodeByIndex(getAdjList(graph), u));
+        int index = 0;
+        AdjList adjU = NULL;
+
+        for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
+            if(getListIndexOf(nodeAux) == u){
+                adjU = getListInfo(nodeAux);
+            }
+        }
 
         List edgeU = getEdgeList(adjU);
-        i = 0;
 
         for(NodeL nodeAux = getListFirst(edgeU); nodeAux; nodeAux = getListNext(nodeAux)){
-            updateSize(graph, dist, back, adjU, u, i);
+            index = getListIndexOf(nodeAux);
+            int i = findIndex(graph, getEdgeDestiny(getListInfo(nodeAux)));
+            updateSize(graph, dist, back, adjU, u, i, index);
         }
     }
 
     List dijkstra = createList();
 
+    // for(int i = 0; i < v; i++){
+    //     printf("%lf\n", dist[i]);
+    // }
+
     if(back[dest] > 0){
-        for(int i = back[dest]; dist[i] == 0; i = back[i]){
-            AdjList adj = getListInfo(getListNodeByIndex(getAdjList(graph), i));
-            printf("%s", getVertexId(adj));
+        for(int i = back[dest]; dist[i] != 0; i = back[i]){
+            AdjList adj = NULL;
+
+            for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
+                if(getListIndexOf(nodeAux) == i){
+                    adj = getListInfo(nodeAux);
+                }
+            }
             insertListElement(dijkstra, adj);
 
         }

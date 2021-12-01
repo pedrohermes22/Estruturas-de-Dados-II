@@ -123,19 +123,19 @@ int insertEdgeGraph(Graph graph, char* origin, char* destiny, char* cepRight, ch
     for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
         AdjListStruct* adjAux = (AdjListStruct* ) getListInfo(nodeAux);
 
-        if(strcpy(origin, adjAux->vertex.id) == 0){
+        if(strcmp(origin, adjAux->vertex.id) == 0){
             originAdj = adjAux;
         }else{
-            if(strcpy(destiny, adjAux->vertex.id) == 0){
+            if(strcmp(destiny, adjAux->vertex.id) == 0){
                 destinyAdj = adjAux;
             }
         }
     }
 
+
     if(originAdj == NULL || destinyAdj == NULL){
         return 0;
     }
-
 
     // Cria uma aresta e salva os dados
     EdgeStruct* new = (EdgeStruct* ) malloc(sizeof(EdgeStruct));
@@ -277,4 +277,10 @@ double getEdgeSpeed(Edge edge){
     EdgeStruct* edgeAux = (EdgeStruct* ) edge;
 
     return edgeAux->speed;
+}
+
+char* getEdgeDestiny(Edge edge){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    return edgeAux->destiny;
 }

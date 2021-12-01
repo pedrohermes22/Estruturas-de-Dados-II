@@ -150,13 +150,14 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
         printf("%s  ", getVertexId(aux));
     }
 
-    printf("alo");
-
     for(NodeL nodeAux = getListFirst(size); nodeAux; nodeAux = getListNext(nodeAux)){
         AdjList aux = getListInfo(nodeAux);
 
         printf("%s  ", getVertexId(aux));
     }
+
+    endList(speed);
+    endList(size);
 }
 
 // Lê os argumentos do arquivo QRY e executa os comandos.

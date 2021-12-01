@@ -36,4 +36,6 @@ double getEdgeSize(Edge edge);
 
 double getEdgeSpeed(Edge edge);
 
+char* getEdgeDestiny(Edge edge);
+
 #endif
