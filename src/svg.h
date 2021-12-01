@@ -34,6 +34,8 @@ void drawCircle(FILE *svgFile, double x, double y, double r, char *fill);
  * FIEL *svgFile: SVG alvo. */
 void drawDots(Graph graph, FILE *svgFile);
 
+void drawKruskal(Graph graph, FILE *svgFile);
+
 /* Insere as linhas do TXT temporário no SVG.
  *
  * FILE *tempTxt: TXT temporário.

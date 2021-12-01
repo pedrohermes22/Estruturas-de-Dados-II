@@ -59,6 +59,32 @@ void drawCircle(FILE *svgFile, double x, double y, double r, char *fill) {
 }
 
 // Desenha os pontos do grafo.
+void drawKruskal(Graph graph, FILE *svgFile) {
+    if ((graph == NULL) || (svgFile == NULL)) return;
+
+    AdjList adjList = getAdjList(graph);
+
+    for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
+        AdjList vertexAux = getListInfo(nodeAux);
+
+        for (NodeL edgeNode = getListFirst(getEdgeList(vertexAux)); edgeNode; edgeNode = getListNext(edgeNode)) {
+            Edge edge = getListInfo(edgeNode);
+            AdjList origin = searchVertex(graph, getEdgeOrigin(edge));
+            AdjList destiny = searchVertex(graph, getEdgeDestiny(edge));
+
+            double x1 = getVertexX(origin);
+            double y1 = getVertexY(origin);
+            double x2 = getVertexX(destiny);
+            double y2 = getVertexY(destiny);
+
+            fprintf(svgFile,
+                    "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:green;stroke-width:8' />\n",
+                    x1, y1, x2, y2);
+        }
+    }
+}
+
+// Desenha os pontos do grafo.
 void drawDots(Graph graph, FILE *svgFile) {
     if ((graph == NULL) || (svgFile == NULL)) return;
 

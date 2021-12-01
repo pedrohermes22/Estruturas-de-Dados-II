@@ -149,18 +149,32 @@ void kruskal(Graph graph) {
 
     // printf("Vertices amount: %d\n\n", vertices);
     
-    for(int i = 0; i < vertices; i++){
-        printf("%d\n", pai[i]);
+    // for(int i = 0; i < vertices; i++){
+    //     printf("%d\n", pai[i]);
+    // }
+    List kruskal = createList();
+
+    for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
+            AdjList adj = getListInfo(nodeAux);
+            int u = getListIndexOf(nodeAux);
+
+            for (NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
+                Edge edge = getListInfo(nodeAux2);
+                int v = findIndexA(graph, getEdgeDestiny(edge));
+
+                for(int i = 0; i < vertices; i++){
+                    printf("%d\n", v);
+                }
+                if(pai[u] != v || arv[orig] != arv[v]){
+                    insertListElement(kruskal, edge);
+                }
+            }
     }
 
-    FILE *svg = fopen("../graph.svg", "w");
-    openSvg(svg);
+    for(NodeL nodeAux = getListFirst(kruskal); nodeAux; nodeAux = getListNext(nodeAux)){
+        Edge edge = getListInfo(nodeAux);
+        deleteEdgeGraph(graph, getEdgeOrigin(edge), getEdgeDestiny(edge));
+    }
 
-    drawDots(graph, svg);
-
-    closeSvg(svg);
-    if (svg != NULL) fclose(svg);
-
-    List adjList = getAdjList(graph);
-    AdjList aux = getListInfo(getListFirst(adjList));  // Primeiro vértice.
+    endList(kruskal);
 }

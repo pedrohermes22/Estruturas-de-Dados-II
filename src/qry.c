@@ -134,6 +134,13 @@ void rvCommand(Graph graph, double x, double y, double width, double height, dou
     Graph area = areaVertices(graph, x, y, width, height);
     kruskal(area);
 
+    List adj = getAdjList(area);
+    AdjList adjAux = getListInfo(getListFirst(adj));
+
+    drawCircle(getTempTxt(), getVertexX(adjAux), getVertexY(adjAux), 10, "pink");
+
+    drawKruskal(area, getTempTxt());
+
     destroyGraph(area);
 }
 
