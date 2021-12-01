@@ -162,9 +162,8 @@ void kruskal(Graph graph) {
                 Edge edge = getListInfo(nodeAux2);
                 int v = findIndexA(graph, getEdgeDestiny(edge));
 
-                for(int i = 0; i < vertices; i++){
-                    printf("%d\n", v);
-                }
+                printf("%d - %d\n",pai[u], u);
+
                 if(pai[u] != v || arv[orig] != arv[v]){
                     insertListElement(kruskal, edge);
                 }

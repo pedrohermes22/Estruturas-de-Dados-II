@@ -132,7 +132,7 @@ void rvCommand(Graph graph, double x, double y, double width, double height, dou
     writeTxt(getTempTxt(), rect);
 
     Graph area = areaVertices(graph, x, y, width, height);
-    //kruskal(area);
+    kruskal(area);
     mst(area);
 
     List adj = getAdjList(area);
