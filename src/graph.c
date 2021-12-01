@@ -231,6 +231,26 @@ int deleteEdgeGraph(Graph graph, char* origin, char* destiny){
     return 0;
 }
 
+AdjList searchVertex(Graph graph, char* id){
+    GraphStruct* graphAux = (GraphStruct* ) graph;
+
+    if(graphAux == NULL){
+        return 0;
+    }
+
+    // Percorre a lista de adjacência
+    for(NodeL nodeAux = getListFirst(graphAux->adj); nodeAux; nodeAux = getListNext(nodeAux)){
+        AdjListStruct* adjAux = (AdjListStruct* ) getListInfo(nodeAux);
+
+        // Se achar o vértice, apaga suas arestas e ele mesmo
+        if(strcmp(id, adjAux->vertex.id) == 0){
+            return adjAux;
+        }
+    }
+    return NULL;
+}
+
+
 double getVertexX(AdjList adjLis){
     AdjListStruct* adjLisAux = (AdjListStruct* ) adjLis;
 
@@ -283,4 +303,10 @@ char* getEdgeDestiny(Edge edge){
     EdgeStruct* edgeAux = (EdgeStruct* ) edge;
 
     return edgeAux->destiny;
+}
+
+char* getEdgeOrigin(Edge edge){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    return edgeAux->origin;
 }
