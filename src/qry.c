@@ -5,7 +5,9 @@
 #include "block.h"
 #include "graph.h"
 #include "hashtable.h"
+#include "kruskal.h"
 #include "list.h"
+#include "svg.h"
 #include "text.h"
 #include "tree.h"
 #include "utils.h"
@@ -118,7 +120,7 @@ void catacCommand(Tree tree, HashTable hash, Graph graph, double x, double y, do
 }
 
 // Executa comando "rv".
-void rvCommand(double x, double y, double width, double height, double factor) {
+void rvCommand(Graph graph, double x, double y, double width, double height, double factor) {
 }
 
 // Executa comando "cx".
@@ -153,6 +155,7 @@ void readQryArguments(Tree tree, HashTable hash, Graph graph, FILE *qryFile) {
 
         if (strncmp(line, "rv ", 3) == 0) {
             sscanf(line, "%s %lf %lf %lf %lf %lf", trash, &x, &y, &width, &height, &factor);
+            rvCommand(graph, x, y, width, height, factor);
         }
 
         if (strncmp(line, "cx ", 3) == 0) {
