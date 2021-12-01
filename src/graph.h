@@ -22,6 +22,8 @@ int deleteEdgeGraph(Graph graph, char* origin, char* destiny);
 
 AdjList searchVertex(Graph graph, char* id);
 
+Edge searchEdge(AdjList origin, char* destiny);
+
 double getVertexX(AdjList adjLis);
 
 double getVertexY(AdjList adjLis);
@@ -41,5 +43,7 @@ double getEdgeSpeed(Edge edge);
 char* getEdgeDestiny(Edge edge);
 
 char* getEdgeOrigin(Edge edge);
+
+char* getEdgeName(Edge edge);
 
 #endif

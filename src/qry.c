@@ -151,23 +151,34 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
 
     List size = dijkstraSize(graph, vertexR, vertexP);
 
+    fprintf(getOutTxt(),"Caminho rapido:\n");
     for (NodeL nodeAux = getListFirst(speed); getListNext(nodeAux); nodeAux = getListNext(nodeAux)) {
         AdjList aux = getListInfo(nodeAux);
         AdjList aux2 = getListInfo(getListNext(nodeAux));
+
+        Edge edge = searchEdge(aux2, getVertexId(aux));
+
+        fprintf(getOutTxt(),"\tAresta Origem: %s Aresta Destino: %s Endereco: %s Tamanho: %.2lf Velocidade: %.2lf \n", getVertexId(aux), getVertexId(aux2), getEdgeName(edge), getEdgeSize(edge), getEdgeSpeed(edge));
 
         fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5' />\n", getVertexX(aux), getVertexY(aux), getVertexX(aux2), getVertexY(aux2), fastest);
 
     }
 
+    fprintf(getOutTxt(),"Caminho curto:\n");
     for (NodeL nodeAux = getListFirst(size); getListNext(nodeAux); nodeAux = getListNext(nodeAux)) {
         AdjList aux = getListInfo(nodeAux);
         AdjList aux2 = getListInfo(getListNext(nodeAux));
+
+        Edge edge = searchEdge(aux2, getVertexId(aux));
+
+        fprintf(getOutTxt(),"\tAresta Origem: %s Aresta Destino: %s Endereco: %s Tamanho: %.2lf Velocidade: %.2lf\n", getVertexId(aux), getVertexId(aux2), getEdgeName(edge), getEdgeSize(edge), getEdgeSpeed(edge));
 
         fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5' />\n", getVertexX(aux) - 10, getVertexY(aux) - 10, getVertexX(aux2) - 10, getVertexY(aux2) - 10, shortest);
     }
 
     if(getListSize(size) == 0){
         fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5;stroke-dash:4' />\n",x, y, r.x, r.y, "red");
+        fprintf(getOutTxt(), "Destino inacessível\n");
     }
 
     endList(speed);
@@ -206,6 +217,9 @@ void readQryArguments(Tree tree, HashTable hash, Graph graph, FILE *qryFile) {
         }
 
         if (strncmp(line, "p? ", 3) == 0) {
+            sprintf(message, ">> COMANDO: %s\n", line);
+            writeTxt(getOutTxt(), message);
+
             sscanf(line, "%s %s %c %d %s %s", trash, cep, &face, &number, shortest, fastest);
             pCommand(r, graph, hash, cep, face, number, shortest, fastest);
         }

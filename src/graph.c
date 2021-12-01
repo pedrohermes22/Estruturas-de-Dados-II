@@ -250,6 +250,24 @@ AdjList searchVertex(Graph graph, char* id){
     return NULL;
 }
 
+Edge searchEdge(AdjList origin, char* destiny){
+    AdjListStruct* originAux = (AdjListStruct* ) origin;
+
+    if(originAux == NULL){
+        return 0;
+    }
+
+    // Percorre de aresta
+    for(NodeL nodeAux = getListFirst(originAux->edge); nodeAux; nodeAux = getListNext(nodeAux)){
+        EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux);
+
+        // Se achar o id de destino retorna a aresta
+        if(strcmp(destiny, edge->destiny) == 0){
+            return edge;
+        }
+    }
+    return NULL;
+}
 
 double getVertexX(AdjList adjLis){
     AdjListStruct* adjLisAux = (AdjListStruct* ) adjLis;
@@ -309,4 +327,10 @@ char* getEdgeOrigin(Edge edge){
     EdgeStruct* edgeAux = (EdgeStruct* ) edge;
 
     return edgeAux->origin;
+}
+
+char* getEdgeName(Edge edge){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    return edgeAux->name;
 }
