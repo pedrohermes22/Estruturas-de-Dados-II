@@ -151,13 +151,14 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
     for (NodeL nodeAux = getListFirst(speed); nodeAux; nodeAux = getListNext(nodeAux)) {
         AdjList aux = getListInfo(nodeAux);
 
-        printf("%s  ", getVertexId(aux));
+        drawCircle(getTempTxt(), getVertexX(aux), getVertexY(aux), 10, "pink");
+
     }
 
     for (NodeL nodeAux = getListFirst(size); nodeAux; nodeAux = getListNext(nodeAux)) {
         AdjList aux = getListInfo(nodeAux);
 
-        printf("%s  ", getVertexId(aux));
+        drawCircle(getTempTxt(), getVertexX(aux), getVertexY(aux), 10, "blue");
     }
 
     endList(speed);

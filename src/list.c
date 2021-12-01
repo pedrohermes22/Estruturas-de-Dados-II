@@ -162,8 +162,7 @@ NodeL getListNodeByIndex(List list, int index){
     ListStruct* listAux = (ListStruct*)list;
 
     int i = 0;
-
-    for(NodeStruct* aux = listAux->head; aux; aux->next){
+    for(NodeStruct* aux = listAux->head; aux; aux = aux->next){
         if(i == index){
             return aux;
         }
