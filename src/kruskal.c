@@ -4,12 +4,12 @@
 #include "graph.h"
 #include "svg.h"
 
-// Retorna o subgrafo com vértices e arestas que estão dentro da região especificada.
+// Retorna o subgrafo com os vértices que estão dentro da região especificada.
 Graph areaVertices(Graph graph, double x, double y, double width, double height) {
     if (graph == NULL) return NULL;
 
-    Graph final = createGraph();  // Retorno da função.
-    List adjList = getAdjList(graph);
+    Graph final = createGraph();       // Retorno da função.
+    List adjList = getAdjList(graph);  //
 
     for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
         AdjList vertexAux = getListInfo(nodeAux);
@@ -41,26 +41,11 @@ Graph areaVertices(Graph graph, double x, double y, double width, double height)
     return final;
 }
 
-// void mst(Graph graph) {
-//     if (graph == NULL) return;
-
-//     EdgeList *edges = createEdgeList();
-//     List adjList = getAdjList(graph);
-
-//     for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
-//         AdjList vertexAux = getListInfo(nodeAux);
-//         List edgeAux = getEdgeList(vertexAux);
-
-//         for (NodeL edgeNode = getListFirst(edgeAux); edgeNode; edgeNode = getListNext(edgeNode)) {
-//             Edge edge = getListInfo(edgeNode);
-//             insertEdgeList(edges, getEdgeOrigin(edge), getEdgeDestiny(edge), getEdgeSize(edge));
-//         }
-//     }
-
-//     printf("Edges: %d\n\n", edges->size);
-//     printEdgeList(edges);
-//     freeEdgeList(edges);
-// }
+void mst(Graph graph) {
+    if (graph == NULL) return;
+    
+    
+}
 
 // void makeEdges(Graph graph) {
 //     if (graph == NULL) return;
@@ -75,82 +60,107 @@ Graph areaVertices(Graph graph, double x, double y, double width, double height)
 //     }
 // }
 
-// int findIndexA(Graph graph, char* destiny){
-//     for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
+void convertDigraphForGraph(Graph graph){
+    for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
+        AdjList adj = getListInfo(nodeAux);
 
-//         if (strcmp(getVertexId(getListInfo(nodeAux)), destiny) == 0) {
-//             return getListIndexOf(nodeAux);
-//         }
-//     }
 
-//     return -1;
-// }
+        for (NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
+            Edge edge = getListInfo(nodeAux2);
+            Edge aux = searchEdge(searchVertex(graph, getEdgeDestiny(edge)), getEdgeOrigin(edge));
 
-// void kruskal(Graph graph) {
-//     if ((graph == NULL) || (getAmountVertex(graph) == 0)) return;
+            if(aux == NULL){
+                // TODO: conseguir o CEP em vez de "a" e "b"
+                insertEdgeGraph(graph, getEdgeDestiny(edge), getEdgeOrigin(edge), "a", "b", getEdgeSize(edge), getEdgeSpeed(edge), getEdgeName(edge));
+            }
+        }
+    }
+}
 
-//     int vertices = getAmountVertex(graph);
-//     int orig = 0;
-//     int dest = 0;
-//     int primeiro = 1;
-//     double menorPeso = 0;
+int findIndexA(Graph graph, char* destiny){
+    for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
 
-//     int pai[vertices];
-//     int arv[vertices];
+        if (strcmp(getVertexId(getListInfo(nodeAux)), destiny) == 0) {
+            return getListIndexOf(nodeAux);
+        }
+    }
 
-//     for (int i = 0; i < vertices; i++) {
-//         arv[i] = i;
-//         pai[i] = -1;
-//     }
-//     pai[orig] = orig;
+    return -1;
+}
 
-//     while (1) {
-//         primeiro = 1;
-//         for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
-//             AdjList adj = getListInfo(nodeAux);
+void kruskal(Graph graph) {
+    if ((graph == NULL) || (getAmountVertex(graph) == 0)) return;
 
-//             for (NodeL nodeAux2 = getListFirst(getEdgeList(graph)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
-//                 Edge edge = getListInfo(nodeAux2);
+    convertDigraphForGraph(graph);
 
-//                 if (arv[getListIndexOf(adj)] != arv[findIndexA(graph, getEdgeDestiny(edge))]) {
-//                     if(primeiro){
-//                         menorPeso = getEdgeSize(edge);
-//                         orig = getListIndexOf(adj);
-//                         dest = findIndexA(graph, getEdgeDestiny(edge));
-//                         primeiro = 0;
-//                     }else{
-//                         if(menorPeso > getEdgeSize(edge)){
-//                             menorPeso = getEdgeSize(edge);
-//                             orig = getListIndexOf(adj);
-//                             dest = findIndexA(graph, getEdgeDestiny(edge));
-//                         }
-//                     }
-//                 }
-//             }
-//         }
+    int vertices = getAmountVertex(graph);
+    int orig = 0;
+    int dest = 0;
+    int primeiro = 1;
+    double menorPeso = 0;
 
-//         if (primeiro == 1) break;
+    int pai[vertices];
+    int arv[vertices];
 
-//         if(pai[orig] == -1) pai[orig] = dest;
-//         else pai[dest] = orig;
+    for (int i = 0; i < vertices; i++) {
+        arv[i] = i;
+        pai[i] = -1;
+    }
+    pai[orig] = orig;
 
-//         for(int i = 0; i < vertices; i++){
-//             if(arv[i] == arv[dest]){
-//                 arv[i] = arv[orig];
-//             }
-//         }
-//     }
+    while (1) {
+        primeiro = 1;
+        for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
+            AdjList adj = getListInfo(nodeAux);
+            int u = getListIndexOf(nodeAux);
 
-//     printf("Vertices amount: %d\n\n", vertices);
+            for (NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
+                Edge edge = getListInfo(nodeAux2);
+                int v = findIndexA(graph, getEdgeDestiny(edge));
 
-//     FILE *svg = fopen("../graph.svg", "w");
-//     openSvg(svg);
+                if (arv[u] != arv[v]) {
+                    if(primeiro){
+                        menorPeso = getEdgeSize(edge);
+                        orig = u;
+                        dest = v;
+                        primeiro = 0;
+                    }else{
+                        if(menorPeso > getEdgeSize(edge)){
+                            menorPeso = getEdgeSize(edge);
+                            orig = u;
+                            dest = v;
+                        }
+                    }
+                }
+            }
+        }
 
-//     drawDots(graph, svg);
+        if (primeiro == 1) break;
 
-//     closeSvg(svg);
-//     if (svg != NULL) fclose(svg);
+        if(pai[orig] == -1) pai[orig] = dest;
+        else pai[dest] = orig;
 
-//     List adjList = getAdjList(graph);
-//     AdjList aux = getListInfo(getListFirst(adjList));  // Primeiro vértice.
-// }
+        for(int i = 0; i < vertices; i++){
+            if(arv[i] == arv[dest]){
+                arv[i] = arv[orig];
+            }
+        }
+    }
+
+    // printf("Vertices amount: %d\n\n", vertices);
+    
+    for(int i = 0; i < vertices; i++){
+        printf("%d\n", pai[i]);
+    }
+
+    FILE *svg = fopen("../graph.svg", "w");
+    openSvg(svg);
+
+    drawDots(graph, svg);
+
+    closeSvg(svg);
+    if (svg != NULL) fclose(svg);
+
+    List adjList = getAdjList(graph);
+    AdjList aux = getListInfo(getListFirst(adjList));  // Primeiro vértice.
+}
