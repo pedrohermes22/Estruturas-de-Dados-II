@@ -11,6 +11,7 @@
 #include "text.h"
 #include "tree.h"
 #include "utils.h"
+#include "dijkstra.h"
 
 typedef struct r {
     char cep[100];
@@ -128,7 +129,36 @@ void cxCommand(char *limiar) {
 }
 
 // Executa comando "p?".
-void pCommand(char *cep, char face, int number, char *shortest, char *fastest) {
+void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, int number, char *shortest, char *fastest) {
+    Block block = hashTableSearch(hash, cep);  // Recupera a quadra cujo a chave é "cep".
+
+    if (block == NULL) return;
+
+    double x = getXCoordinate(face, number, block);
+    double y = getYCoordinate(face, number, block);
+
+
+    AdjList vertexP = getClosestVertex(graph, x, y);
+
+    AdjList vertexR = getClosestVertex(graph, r.x, r.y);
+
+    List speed = dijkstraSpeed(graph, vertexR, vertexP);
+
+    List size = dijkstraSize(graph, vertexR, vertexP);
+
+    for(NodeL nodeAux = getListFirst(speed); nodeAux; nodeAux = getListNext(nodeAux)){
+        AdjList aux = getListInfo(nodeAux);
+
+        printf("%s  ", getVertexId(aux));
+    }
+
+    printf("alo");
+
+    for(NodeL nodeAux = getListFirst(size); nodeAux; nodeAux = getListNext(nodeAux)){
+        AdjList aux = getListInfo(nodeAux);
+
+        printf("%s  ", getVertexId(aux));
+    }
 }
 
 // Lê os argumentos do arquivo QRY e executa os comandos.
@@ -164,6 +194,7 @@ void readQryArguments(Tree tree, HashTable hash, Graph graph, FILE *qryFile) {
 
         if (strncmp(line, "p? ", 3) == 0) {
             sscanf(line, "%s %s %c %d %s %s", trash, cep, &face, &number, shortest, fastest);
+            pCommand(r, graph, hash, cep, face, number, shortest, fastest);
         }
     }
 }

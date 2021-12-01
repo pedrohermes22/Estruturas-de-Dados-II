@@ -15,4 +15,6 @@ double getXCoordinate(char face, int number, Block block);
 // Retorna a coordenada Y do registrador.
 double getYCoordinate(char face, int number, Block block);
 
+AdjList getClosestVertex(Graph graph, double x, double y);
+
 #endif
