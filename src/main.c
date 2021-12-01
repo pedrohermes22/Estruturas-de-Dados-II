@@ -82,6 +82,7 @@ void qryCommands(Tree tree, HashTable hash, Graph graph, char *bed, char *bsd, c
     openTempTxt(bsd);
     openOutTxt(bsd, qName);
     openSvg(svgFile);
+    // printf("%p\n", hash);
     openQry(tree, hash, graph, qryPath);
     // == Fim da abertura de arquivos ==
 
