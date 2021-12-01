@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "block.h"
+#include "dijkstra.h"
 #include "graph.h"
 #include "hashtable.h"
 #include "kruskal.h"
@@ -11,7 +12,6 @@
 #include "text.h"
 #include "tree.h"
 #include "utils.h"
-#include "dijkstra.h"
 
 typedef struct r {
     char cep[100];
@@ -98,7 +98,7 @@ void catacCommand(Tree tree, HashTable hash, Graph graph, double x, double y, do
     writeTxt(getTempTxt(), rect);                                        // Insere "rect" no TXT temporário.
     recursiveCatac(tree, getTreeRoot(tree), hash, x, y, width, height);  // Deleta as quadras.
 
-    deleteVertexGraph(graph, "(b0|2,6)");
+    // deleteVertexGraph(graph, "(b0|2,6)");
     AdjList adjList = getAdjList(graph);
     List listAux = createList();  // Lista com os pontos internos.
 
@@ -122,6 +122,9 @@ void catacCommand(Tree tree, HashTable hash, Graph graph, double x, double y, do
 
 // Executa comando "rv".
 void rvCommand(Graph graph, double x, double y, double width, double height, double factor) {
+    if (graph == NULL) return;
+
+    Graph area = areaVertices(graph, x, y, width, height);
 }
 
 // Executa comando "cx".
@@ -137,7 +140,6 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
     double x = getXCoordinate(face, number, block);
     double y = getYCoordinate(face, number, block);
 
-
     AdjList vertexP = getClosestVertex(graph, x, y);
 
     AdjList vertexR = getClosestVertex(graph, r.x, r.y);
@@ -146,7 +148,7 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
 
     List size = dijkstraSize(graph, vertexR, vertexP);
 
-    for(NodeL nodeAux = getListFirst(speed); nodeAux; nodeAux = getListNext(nodeAux)){
+    for (NodeL nodeAux = getListFirst(speed); nodeAux; nodeAux = getListNext(nodeAux)) {
         AdjList aux = getListInfo(nodeAux);
 
         printf("%s  ", getVertexId(aux));
@@ -154,7 +156,7 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
 
     printf("alo");
 
-    for(NodeL nodeAux = getListFirst(size); nodeAux; nodeAux = getListNext(nodeAux)){
+    for (NodeL nodeAux = getListFirst(size); nodeAux; nodeAux = getListNext(nodeAux)) {
         AdjList aux = getListInfo(nodeAux);
 
         printf("%s  ", getVertexId(aux));
