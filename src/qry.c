@@ -151,17 +151,23 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
 
     List size = dijkstraSize(graph, vertexR, vertexP);
 
-    for (NodeL nodeAux = getListFirst(speed); nodeAux; nodeAux = getListNext(nodeAux)) {
+    for (NodeL nodeAux = getListFirst(speed); getListNext(nodeAux); nodeAux = getListNext(nodeAux)) {
         AdjList aux = getListInfo(nodeAux);
+        AdjList aux2 = getListInfo(getListNext(nodeAux));
 
-        drawCircle(getTempTxt(), getVertexX(aux), getVertexY(aux), 10, "pink");
+        fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5' />\n", getVertexX(aux), getVertexY(aux), getVertexX(aux2), getVertexY(aux2), fastest);
 
     }
 
-    for (NodeL nodeAux = getListFirst(size); nodeAux; nodeAux = getListNext(nodeAux)) {
+    for (NodeL nodeAux = getListFirst(size); getListNext(nodeAux); nodeAux = getListNext(nodeAux)) {
         AdjList aux = getListInfo(nodeAux);
+        AdjList aux2 = getListInfo(getListNext(nodeAux));
 
-        drawCircle(getTempTxt(), getVertexX(aux), getVertexY(aux), 10, "blue");
+        fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5' />\n", getVertexX(aux) - 10, getVertexY(aux) - 10, getVertexX(aux2) - 10, getVertexY(aux2) - 10, shortest);
+    }
+
+    if(getListSize(size) == 0){
+        fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5;stroke-dash:4' />\n",x, y, r.x, r.y, "red");
     }
 
     endList(speed);

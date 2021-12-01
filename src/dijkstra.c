@@ -145,7 +145,7 @@ List dijkstraSpeed(Graph graph, char* origin, char* destiny){
     List dijkstra = createList();
 
     if(back[dest] > 0){
-        for(int i = dest; dist[i] != 0; i = back[i]){
+        for(int i = dest; i != -1; i = back[i]){
             AdjList adj = NULL;
 
             for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
@@ -211,7 +211,7 @@ List dijkstraSize(Graph graph, char* origin, char* destiny){
     List dijkstra = createList();
 
     if(back[dest] > 0){
-        for(int i = dest; dist[i] != 0; i = back[i]){
+        for(int i = dest; i != -1; i = back[i]){
             AdjList adj = NULL;
 
             for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
