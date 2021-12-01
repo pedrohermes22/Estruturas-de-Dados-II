@@ -93,21 +93,23 @@ void kruskal(Graph graph) {
         primeiro = 1;
         for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
             AdjList adj = getListInfo(nodeAux);
+            int u = getListIndexOf(nodeAux);
 
-            for (NodeL nodeAux2 = getListFirst(getEdgeList(graph)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
+            for (NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
                 Edge edge = getListInfo(nodeAux2);
+                int v = findIndexA(graph, getEdgeDestiny(edge));
 
-                if (arv[getListIndexOf(adj)] != arv[findIndexA(graph, getEdgeDestiny(edge))]) {
+                if (arv[u] != arv[v]) {
                     if(primeiro){
                         menorPeso = getEdgeSize(edge);
-                        orig = getListIndexOf(adj);
-                        dest = findIndexA(graph, getEdgeDestiny(edge));
+                        orig = u;
+                        dest = v;
                         primeiro = 0;
                     }else{
                         if(menorPeso > getEdgeSize(edge)){
                             menorPeso = getEdgeSize(edge);
-                            orig = getListIndexOf(adj);
-                            dest = findIndexA(graph, getEdgeDestiny(edge));
+                            orig = u;
+                            dest = v;
                         }
                     }
                 }
@@ -126,16 +128,16 @@ void kruskal(Graph graph) {
         }
     }
 
-    printf("Vertices amount: %d\n\n", vertices);
+//     printf("Vertices amount: %d\n\n", vertices);
 
-    FILE *svg = fopen("../graph.svg", "w");
-    openSvg(svg);
+//     FILE *svg = fopen("../graph.svg", "w");
+//     openSvg(svg);
 
-    drawDots(graph, svg);
+//     drawDots(graph, svg);
 
-    closeSvg(svg);
-    if (svg != NULL) fclose(svg);
+//     closeSvg(svg);
+//     if (svg != NULL) fclose(svg);
 
-    List adjList = getAdjList(graph);
-    AdjList aux = getListInfo(getListFirst(adjList));  // Primeiro vértice.
+//     List adjList = getAdjList(graph);
+//     AdjList aux = getListInfo(getListFirst(adjList));  // Primeiro vértice.
 }

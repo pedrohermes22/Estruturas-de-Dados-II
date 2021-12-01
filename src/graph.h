@@ -46,4 +46,6 @@ char* getEdgeOrigin(Edge edge);
 
 char* getEdgeName(Edge edge);
 
+int getAmountEdge(Graph graph);
+
 #endif

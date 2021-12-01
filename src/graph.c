@@ -8,6 +8,7 @@
 typedef struct graphStruct{
 
     int amountVertex;
+    int amountEdge;
     List adj;
 
 }GraphStruct;
@@ -48,6 +49,7 @@ Graph createGraph(){
 
     new->adj = createList();
     new->amountVertex = 0;
+    new->amountEdge = 0;
 
     return new;
 }
@@ -151,6 +153,7 @@ int insertEdgeGraph(Graph graph, char* origin, char* destiny, char* cepRight, ch
 
     insertListElement(originAdj->edge, new);
 
+    graphAux->amountEdge++;
     return 1;
 }
 
@@ -180,6 +183,7 @@ int deleteVertexGraph(Graph graph, char* id){
                 if(strcmp(edge->destiny, id) == 0){
                     removeListNode(adjAux->edge, nodeAux2);
                     free(edge);
+                    graphAux->amountEdge--;
                 }
             } 
         }
@@ -190,6 +194,7 @@ int deleteVertexGraph(Graph graph, char* id){
         for(NodeL nodeAux2 = getListFirst(adjAux->edge); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
             EdgeStruct* edge = (EdgeStruct* ) getListInfo(nodeAux2);
 
+            graphAux->amountEdge--;
             free(edge);
         }
         endList(adjAux->edge);
@@ -222,6 +227,7 @@ int deleteEdgeGraph(Graph graph, char* origin, char* destiny){
                 if(strcmp(edge->destiny, destiny) == 0){
                     removeListNode(adjAux->edge, nodeAux2);
                     free(edge);
+                    graphAux->amountEdge--;
                     return 1;
                 }
             } 
@@ -333,4 +339,10 @@ char* getEdgeName(Edge edge){
     EdgeStruct* edgeAux = (EdgeStruct* ) edge;
 
     return edgeAux->name;
+}
+
+int getAmountEdge(Graph graph){
+    GraphStruct* graphAux = (GraphStruct* ) graph;
+
+    return graphAux->amountEdge;
 }
