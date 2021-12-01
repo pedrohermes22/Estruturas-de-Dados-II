@@ -125,6 +125,9 @@ void rvCommand(Graph graph, double x, double y, double width, double height, dou
     if (graph == NULL) return;
 
     Graph area = areaVertices(graph, x, y, width, height);
+    kruskal(area);
+
+    destroyGraph(area);
 }
 
 // Executa comando "cx".
