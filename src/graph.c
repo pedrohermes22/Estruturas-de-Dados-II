@@ -3,6 +3,7 @@
 #include <string.h>
 #include "graph.h"
 #include "list.h"
+#include "hashtable.h"
 
 // Estrutura do grapho
 typedef struct graphStruct{
@@ -24,6 +25,8 @@ typedef struct edgeStruct{
 
     double size;
     double speed;
+    
+    int isActive;
 
 }EdgeStruct;
 
@@ -79,6 +82,21 @@ int destroyGraph(Graph graph){
         free(adjAux);
     }
 
+    // Libera o grapho
+    endList(graphAux->adj);
+    free(graphAux);
+
+    return 1;
+}
+
+// Deleta um grapho mas sem apagar os vertices e arestas
+int destroyGraphWL(Graph graph){
+    GraphStruct* graphAux = (GraphStruct* ) graph;
+
+    if(graphAux == NULL){
+        return 0;
+    }
+    
     // Libera o grapho
     endList(graphAux->adj);
     free(graphAux);
@@ -144,6 +162,7 @@ int insertEdgeGraph(Graph graph, char* origin, char* destiny, char* cepRight, ch
 
     new->size = size;
     new->speed = speed;
+    new->isActive = 1;
 
     strcpy(new->origin, origin);
     strcpy(new->destiny, destiny);
@@ -275,6 +294,39 @@ Edge searchEdge(AdjList origin, char* destiny){
     return NULL;
 }
 
+void dfs(Graph graph, Graph agm, AdjList adj, int cd, double fatorIn, double fator, HashTable visit){
+
+    List edges = getEdgeList(adj);
+
+    hashTableInsert(visit, getVertexId(adj), adj);
+
+    for(NodeL nodeAux = getListFirst(edges); nodeAux; nodeAux = getListNext(nodeAux)){
+        Edge edge = getListInfo(nodeAux);
+        AdjList adjToChange = searchVertex(graph, getEdgeOrigin(edge));
+        Edge edgeFromGraph = searchEdge(adjToChange, getEdgeDestiny(edge));
+
+        double speed = getEdgeSpeed(edge) - (getEdgeSpeed(edge) * fator);
+
+        if(edgeFromGraph != NULL){
+            setEdgeSpeed(edgeFromGraph, speed);
+        }
+
+        setEdgeSpeed(edge, speed);
+
+        AdjList next = searchVertex(agm, getEdgeDestiny(edge));
+
+        if(fator + fatorIn < 1){
+            fator = fator + fatorIn;
+        }
+
+        if(hashTableSearch(visit, getVertexId(next)) == NULL){
+            dfs(graph, agm, next, cd+1, fatorIn, fator, visit);
+        }
+
+    }
+
+}
+
 double getVertexX(AdjList adjLis){
     AdjListStruct* adjLisAux = (AdjListStruct* ) adjLis;
 
@@ -345,4 +397,50 @@ int getAmountEdge(Graph graph){
     GraphStruct* graphAux = (GraphStruct* ) graph;
 
     return graphAux->amountEdge;
+}
+
+char* getEdgeRightCep(Edge edge){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    return edgeAux->cepRight;
+}
+
+char* getEdgeLeftCep(Edge edge){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    return edgeAux->cepLeft;
+}
+
+void setEdgeSpeed(Edge edge, double speed){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    edgeAux->speed = speed;
+}
+
+int isEdgeValid(Edge edge){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    edgeAux->isActive;
+}
+
+void setEdgeValid(Edge edge, int valid){
+    EdgeStruct* edgeAux = (EdgeStruct* ) edge;
+
+    edgeAux->isActive = valid;
+}
+
+void convertDigraphForGraph(Graph graph){
+    for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
+        AdjList adj = getListInfo(nodeAux);
+
+
+        for (NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
+            Edge edge = getListInfo(nodeAux2);
+            Edge aux = searchEdge(searchVertex(graph, getEdgeDestiny(edge)), getEdgeOrigin(edge));
+
+            if(aux == NULL){
+                insertEdgeGraph(graph, getEdgeDestiny(edge), getEdgeOrigin(edge), getEdgeRightCep(edge), getEdgeLeftCep(edge), getEdgeSize(edge), getEdgeSpeed(edge), getEdgeName(edge));
+            }
+        }
+    }
 }

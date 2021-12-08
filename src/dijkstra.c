@@ -78,10 +78,13 @@ void updateSpeed(Graph graph, double* dist, int* back, AdjList adjU, int u, int 
     }
 
     if(edgeV){
-        if(dist[v] > dist[u] + getEdgeSpeed(edgeV)){
-            dist[v] = dist[u] + getEdgeSpeed(edgeV);
-            back[v] = u;
+        if(isEdgeValid(edgeV)){
+            if(dist[v] > dist[u] + getEdgeSpeed(edgeV)){
+                dist[v] = dist[u] + getEdgeSpeed(edgeV);
+                back[v] = -1;
+            }
         }
+        // TODO: Se não funcionar tem que mudar aqui por causa do comando cx
     }
 
 }

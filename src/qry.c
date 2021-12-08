@@ -12,6 +12,7 @@
 #include "text.h"
 #include "tree.h"
 #include "utils.h"
+#include "union-find.h"
 
 typedef struct r {
     char cep[100];
@@ -19,6 +20,8 @@ typedef struct r {
     int number;
     double x, y;
 } Register_R;
+
+char color[][25]= {"pink", "blue", "red", "brown", "royalblue", "orange", "salmon", "yellow", "seagreen", "gray", "sienna", "skyblue", "slateblue", "slategray", "slategrey", "snow", "springgreen", "steelblue", "tan", "thistle", "tomato", "turquoise", "violet", "wheat", "whitesmoke"};
 
 // Executa comando "@o?".
 void oCommand(Register_R *r, HashTable hash, char *cep, char face, int number) {
@@ -132,20 +135,81 @@ void rvCommand(Graph graph, double x, double y, double width, double height, dou
     writeTxt(getTempTxt(), rect);
 
     Graph area = areaVertices(graph, x, y, width, height);
-    kruskal(area);
+    List uf = kruskal(area);
+
+    Graph gr = getListInfo(getListFirst(uf));
     
-    List adj = getAdjList(area);
+    List adj = getAdjList(gr);
     AdjList adjAux = getListInfo(getListFirst(adj));
 
-    drawCircle(getTempTxt(), getVertexX(adjAux), getVertexY(adjAux), 10, "pink");
+    drawKruskal(gr, getTempTxt());
 
-    drawKruskal(area, getTempTxt());
+    drawCircle(getTempTxt(), getVertexX(adjAux), getVertexY(adjAux), 10, "green");
 
+    HashTable visit = hashTableCreate(getAmountVertex(gr));
+
+    convertDigraphForGraph(gr);
+
+    dfs(graph, gr, adjAux, 0, factor, factor, visit);
+
+    for(NodeL nodeAux = getListFirst(getAdjList(gr)); nodeAux; nodeAux = getListNext(nodeAux)){
+        AdjList adj = getListInfo(nodeAux);
+
+        for(NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
+            Edge edge = getListInfo(nodeAux2);
+            fprintf(getOutTxt(),"\tAresta: Nome: %s Origem: %s Destino: %s Velocidade: %.2lf Tamanho: %.2lf Cep a Direita: %s Cep a Esquerda: %s \n", getEdgeName(edge), getEdgeOrigin(edge), getEdgeDestiny(edge), getEdgeSpeed(edge), getEdgeSize(edge), getEdgeRightCep(edge), getEdgeLeftCep(edge));
+        }
+    }
+
+
+    for(NodeL nodeAux = getListFirst(uf); nodeAux; nodeAux = getListNext(nodeAux)){
+        destroyGraph(getListInfo(nodeAux));
+    }
+    endList(uf);
+    hashTableEnd(visit);
     destroyGraph(area);
 }
 
 // Executa comando "cx".
-void cxCommand(char *limiar) {
+void cxCommand(Graph graph, double limiar) {
+
+    List edges = createListEdge(graph);
+    sorting(edges, 0, (getListSize(edges) - 1));
+
+    List uf = createUFind(graph);
+
+    for(NodeL nodeAux = getListFirst(edges); nodeAux; nodeAux = getListNext(nodeAux)){
+        Edge edge = getListInfo(nodeAux);
+        UFUnion(uf, edge);
+    }
+
+    for(NodeL nodeAux = getListFirst(uf); nodeAux; nodeAux = getListNext(nodeAux)){
+        Graph gr = getListInfo(nodeAux);
+
+        int index = getListIndexOf(nodeAux);
+
+        fprintf(getOutTxt(), "Região: %d\n", getListIndexOf(nodeAux));
+
+        for(NodeL nodeAux2 = getListFirst(getAdjList(gr)); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
+            AdjList adj = getListInfo(nodeAux2);
+
+            fprintf(getOutTxt(), "\t Vértice: %s\n", getVertexId(adj));
+        }
+
+        drawCxCommand(gr, getTempTxt(), color[index%25]);
+    }
+
+    for(NodeL nodeAux = getListFirst(edges); nodeAux; nodeAux = getListNext(nodeAux)){
+        Edge edge = getListInfo(nodeAux);
+        if(getEdgeSpeed(edge) < limiar){
+            setEdgeValid(edge, 0);
+            AdjList originAdj = searchVertex(graph, getEdgeOrigin(edge));
+            AdjList destinyAdj = searchVertex(graph, getEdgeDestiny(edge));
+            fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:red;stroke-width:6' />\n", getVertexX(originAdj), getVertexY(originAdj), getVertexX(destinyAdj), getVertexY(destinyAdj));
+        }
+    }
+
+    endList(edges);
 }
 
 // Executa comando "p?".
@@ -166,27 +230,31 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
     List size = dijkstraSize(graph, vertexR, vertexP);
 
     fprintf(getOutTxt(), "Caminho rapido:\n");
-    for (NodeL nodeAux = getListFirst(speed); getListNext(nodeAux); nodeAux = getListNext(nodeAux)) {
-        AdjList aux = getListInfo(nodeAux);
-        AdjList aux2 = getListInfo(getListNext(nodeAux));
+    if(getListSize(speed) > 1){
+        for (NodeL nodeAux = getListFirst(speed); getListNext(nodeAux); nodeAux = getListNext(nodeAux)) {
+            AdjList aux = getListInfo(nodeAux);
+            AdjList aux2 = getListInfo(getListNext(nodeAux));
 
-        Edge edge = searchEdge(aux2, getVertexId(aux));
+            Edge edge = searchEdge(aux2, getVertexId(aux));
 
-        fprintf(getOutTxt(), "\tAresta Origem: %s Aresta Destino: %s Endereco: %s Tamanho: %.2lf Velocidade: %.2lf \n", getVertexId(aux), getVertexId(aux2), getEdgeName(edge), getEdgeSize(edge), getEdgeSpeed(edge));
+            fprintf(getOutTxt(), "\tAresta Origem: %s Aresta Destino: %s Endereco: %s Tamanho: %.2lf Velocidade: %.2lf \n", getVertexId(aux), getVertexId(aux2), getEdgeName(edge), getEdgeSize(edge), getEdgeSpeed(edge));
 
-        fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5' />\n", getVertexX(aux), getVertexY(aux), getVertexX(aux2), getVertexY(aux2), fastest);
+            fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5' />\n", getVertexX(aux), getVertexY(aux), getVertexX(aux2), getVertexY(aux2), fastest);
+        }
     }
 
     fprintf(getOutTxt(), "Caminho curto:\n");
-    for (NodeL nodeAux = getListFirst(size); getListNext(nodeAux); nodeAux = getListNext(nodeAux)) {
-        AdjList aux = getListInfo(nodeAux);
-        AdjList aux2 = getListInfo(getListNext(nodeAux));
+    if(getListSize(size) > 1){
+        for (NodeL nodeAux = getListFirst(size); getListNext(nodeAux); nodeAux = getListNext(nodeAux)) {
+            AdjList aux = getListInfo(nodeAux);
+            AdjList aux2 = getListInfo(getListNext(nodeAux));
 
-        Edge edge = searchEdge(aux2, getVertexId(aux));
+            Edge edge = searchEdge(aux2, getVertexId(aux));
 
-        fprintf(getOutTxt(), "\tAresta Origem: %s Aresta Destino: %s Endereco: %s Tamanho: %.2lf Velocidade: %.2lf\n", getVertexId(aux), getVertexId(aux2), getEdgeName(edge), getEdgeSize(edge), getEdgeSpeed(edge));
+            fprintf(getOutTxt(), "\tAresta Origem: %s Aresta Destino: %s Endereco: %s Tamanho: %.2lf Velocidade: %.2lf\n", getVertexId(aux), getVertexId(aux2), getEdgeName(edge), getEdgeSize(edge), getEdgeSpeed(edge));
 
-        fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5' />\n", getVertexX(aux) - 10, getVertexY(aux) - 10, getVertexX(aux2) - 10, getVertexY(aux2) - 10, shortest);
+            fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5' />\n", getVertexX(aux) - 10, getVertexY(aux) - 10, getVertexX(aux2) - 10, getVertexY(aux2) - 10, shortest);
+        }
     }
 
     if (getListSize(size) == 0) {
@@ -200,10 +268,10 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
 
 // Lê os argumentos do arquivo QRY e executa os comandos.
 void readQryArguments(Tree tree, HashTable hash, Graph graph, FILE *qryFile) {
-    char line[200], trash[10], message[250], limiar[100];  // << Corrigir o "limiar".
+    char line[200], trash[10], message[250];
     char cep[100], face, shortest[50], fastest[50];
     int number;
-    double x, y, width, height, factor;
+    double x, y, width, height, factor, limiar;
     Register_R r;  // Armazena o ponto informado pelo comando "@o?".
 
     while (fgets(line, sizeof(line), qryFile) != NULL) {
@@ -221,12 +289,17 @@ void readQryArguments(Tree tree, HashTable hash, Graph graph, FILE *qryFile) {
         }
 
         if (strncmp(line, "rv ", 3) == 0) {
+            sprintf(message, ">> COMANDO: %s\n", line);
+            writeTxt(getOutTxt(), message);
             sscanf(line, "%s %lf %lf %lf %lf %lf", trash, &x, &y, &width, &height, &factor);
             rvCommand(graph, x, y, width, height, factor);
         }
 
         if (strncmp(line, "cx ", 3) == 0) {
-            sscanf(line, "%s %s", trash, limiar);
+            sprintf(message, ">> COMANDO: %s\n", line);
+            writeTxt(getOutTxt(), message);
+            sscanf(line, "%s %lf", trash, &limiar);
+            cxCommand(graph, limiar);
         }
 
         if (strncmp(line, "p? ", 3) == 0) {

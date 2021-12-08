@@ -2,7 +2,35 @@
 #include <string.h>
 
 #include "graph.h"
+#include "union-find.h"
 #include "svg.h"
+
+int sortingAux(List edges, int origin, int destiny){
+    double p = getEdgeSize(getListInfo(getListLast(edges)));
+
+    int pI = origin;
+
+    for( int i = pI; i < destiny; i++){
+        if(getEdgeSize(getListInfo(getListNodeByIndex(edges, i))) <= p){
+            swapListInfo(getListNodeByIndex(edges, i), getListNodeByIndex(edges, pI));
+            pI++;
+        }
+    }
+
+    swapListInfo(getListNodeByIndex(edges, pI), getListNodeByIndex(edges, destiny));
+    return pI;
+}
+
+void sorting(List edges, int origin, int destiny){
+    if(origin > destiny){
+        return;
+    }
+
+    int p = sortingAux(edges, origin, destiny);
+
+    sorting(edges, origin, p-1);
+    sorting(edges, p+1, destiny);
+}
 
 // Retorna o subgrafo com os vértices que estão dentro da região especificada.
 Graph areaVertices(Graph graph, double x, double y, double width, double height) {
@@ -32,7 +60,7 @@ Graph areaVertices(Graph graph, double x, double y, double width, double height)
 
             for (NodeL edgeNode = getListFirst(edgeAux); edgeNode; edgeNode = getListNext(edgeNode)) {
                 Edge edge = getListInfo(edgeNode);
-                insertEdgeGraph(final, getEdgeOrigin(edge), getEdgeDestiny(edge), "a", "b", getEdgeSize(edge), getEdgeSpeed(edge),
+                insertEdgeGraph(final, getEdgeOrigin(edge), getEdgeDestiny(edge), getEdgeRightCep(edge), getEdgeLeftCep(edge), getEdgeSize(edge), getEdgeSpeed(edge),
                                 getEdgeName(edge));
             }
         }
@@ -41,40 +69,23 @@ Graph areaVertices(Graph graph, double x, double y, double width, double height)
     return final;
 }
 
-void mst(Graph graph) {
-    if (graph == NULL) return;
-    
-    
-}
+List createListEdge(Graph graph){
+    List edges = createList();
 
-// void makeEdges(Graph graph) {
-//     if (graph == NULL) return;
+    List adj = getAdjList(graph);
+    for(NodeL nodeAux = getListFirst(adj); nodeAux; nodeAux = getListNext(nodeAux)){
+        AdjList adjList = getListInfo(nodeAux);
 
-//     AdjList adjList = getAdjList(graph);
+        List edgeList = getEdgeList(adjList);
 
-//     for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
-//         AdjList vertexAux = getListInfo(nodeAux);
-
-//         double xAux = getVertexX(vertexAux);
-//         double yAux = getVertexY(vertexAux);
-//     }
-// }
-
-void convertDigraphForGraph(Graph graph){
-    for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
-        AdjList adj = getListInfo(nodeAux);
-
-
-        for (NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
+        for(NodeL nodeAux2 = getListFirst(edgeList); nodeAux2; nodeAux2 = getListNext(nodeAux2)){
             Edge edge = getListInfo(nodeAux2);
-            Edge aux = searchEdge(searchVertex(graph, getEdgeDestiny(edge)), getEdgeOrigin(edge));
 
-            if(aux == NULL){
-                // TODO: conseguir o CEP em vez de "a" e "b"
-                insertEdgeGraph(graph, getEdgeDestiny(edge), getEdgeOrigin(edge), "a", "b", getEdgeSize(edge), getEdgeSpeed(edge), getEdgeName(edge));
-            }
+            insertListElement(edges, edge);
         }
     }
+
+    return edges;
 }
 
 int findIndexA(Graph graph, char* destiny){
@@ -88,92 +99,20 @@ int findIndexA(Graph graph, char* destiny){
     return -1;
 }
 
-void kruskal(Graph graph) {
-    if ((graph == NULL) || (getAmountVertex(graph) == 0)) return;
-
+List kruskal(Graph graph){
     convertDigraphForGraph(graph);
 
-    int vertices = getAmountVertex(graph);
-    int orig = 0;
-    int dest = 0;
-    int primeiro = 1;
-    double menorPeso = 0;
+    List edges = createListEdge(graph);
+    sorting(edges, 0, (getListSize(edges) - 1));
 
-    int pai[vertices];
-    int arv[vertices];
+    List uf = createUFind(graph);
 
-    for (int i = 0; i < vertices; i++) {
-        arv[i] = i;
-        pai[i] = -1;
-    }
-    pai[orig] = orig;
-
-    while (1) {
-        primeiro = 1;
-        for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
-            AdjList adj = getListInfo(nodeAux);
-            int u = getListIndexOf(nodeAux);
-
-            for (NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
-                Edge edge = getListInfo(nodeAux2);
-                int v = findIndexA(graph, getEdgeDestiny(edge));
-
-                if (arv[u] != arv[v]) {
-                    if(primeiro){
-                        menorPeso = getEdgeSize(edge);
-                        orig = u;
-                        dest = v;
-                        primeiro = 0;
-                    }else{
-                        if(menorPeso > getEdgeSize(edge)){
-                            menorPeso = getEdgeSize(edge);
-                            orig = u;
-                            dest = v;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (primeiro == 1) break;
-
-        if(pai[orig] == -1) pai[orig] = dest;
-        else pai[dest] = orig;
-
-        for(int i = 0; i < vertices; i++){
-            if(arv[i] == arv[dest]){
-                arv[i] = arv[orig];
-            }
-        }
-    }
-
-    // printf("Vertices amount: %d\n\n", vertices);
-    
-    // for(int i = 0; i < vertices; i++){
-    //     printf("%d\n", pai[i]);
-    // }
-    List kruskal = createList();
-
-    for (NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)) {
-            AdjList adj = getListInfo(nodeAux);
-            int u = getListIndexOf(nodeAux);
-
-            for (NodeL nodeAux2 = getListFirst(getEdgeList(adj)); nodeAux2; nodeAux2 = getListNext(nodeAux2)) {
-                Edge edge = getListInfo(nodeAux2);
-                int v = findIndexA(graph, getEdgeDestiny(edge));
-
-                printf("%d - %d\n",pai[u], u);
-
-                if(pai[u] != v || arv[orig] != arv[v]){
-                    insertListElement(kruskal, edge);
-                }
-            }
-    }
-
-    for(NodeL nodeAux = getListFirst(kruskal); nodeAux; nodeAux = getListNext(nodeAux)){
+    for(NodeL nodeAux = getListFirst(edges); nodeAux; nodeAux = getListNext(nodeAux)){
         Edge edge = getListInfo(nodeAux);
-        deleteEdgeGraph(graph, getEdgeOrigin(edge), getEdgeDestiny(edge));
+        UFUnion(uf, edge);
     }
 
-    endList(kruskal);
+    endList(edges);
+
+    return uf;
 }

@@ -61,6 +61,8 @@ Pós: Um void* com o endereço do no.
 */
 NodeL getListFirst(List list);
 
+NodeL getListLast(List list);
+
 /*
 Função: Recupera a quantidade de elementos dentro da lista dinamica.
 Pré: Um void* com o endereço da lista.
@@ -78,5 +80,7 @@ int getListVisit(List list);
 int getListIndexOf(NodeL node);
 
 NodeL getListNodeByIndex(List list, int index);
+
+void swapListInfo(NodeL node1, NodeL node2);
 
 #endif

@@ -36,6 +36,8 @@ void drawDots(Graph graph, FILE *svgFile);
 
 void drawKruskal(Graph graph, FILE *svgFile);
 
+void drawCxCommand(Graph graph, FILE *svgFile, char* color);
+
 /* Insere as linhas do TXT temporário no SVG.
  *
  * FILE *tempTxt: TXT temporário.

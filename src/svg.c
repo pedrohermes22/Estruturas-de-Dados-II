@@ -78,9 +78,27 @@ void drawKruskal(Graph graph, FILE *svgFile) {
             double y2 = getVertexY(destiny);
 
             fprintf(svgFile,
-                    "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:green;stroke-width:8' />\n",
+                    "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:lightgreen;stroke-width:8' />\n",
                     x1, y1, x2, y2);
         }
+    }
+}
+
+// Desenha os pontos do grafo.
+void drawCxCommand(Graph graph, FILE *svgFile, char* color) {
+    if ((graph == NULL) || (svgFile == NULL)) return;
+
+    AdjList adjList = getAdjList(graph);
+
+    for (NodeL nodeAux = getListFirst(adjList); nodeAux; nodeAux = getListNext(nodeAux)) {
+        AdjList vertexAux = getListInfo(nodeAux);
+
+        double x = getVertexX(vertexAux);
+        double y = getVertexY(vertexAux);
+
+        fprintf(svgFile,
+                "\t<circle cx='%lf' cy='%lf' r='25' fill='%s' fill-opacity='0.5'/>\n",
+                x - 2, y - 1, color);
     }
 }
 

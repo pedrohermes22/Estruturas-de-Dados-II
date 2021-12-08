@@ -5,7 +5,10 @@
 
 Graph areaVertices(Graph graph, double x, double y, double width, double height);
 
-void kruskal(Graph graph);
-void mst(Graph graph);
+void sorting(List edges, int origin, int destiny);
+
+List createListEdge(Graph graph);
+
+List kruskal(Graph graph);
 
 #endif

@@ -131,6 +131,12 @@ NodeL getListFirst(List list) {
     return listAux->head;
 }
 
+NodeL getListLast(List list) {
+    ListStruct* listAux = (ListStruct*)list;
+
+    return listAux->tail;
+}
+
 // Função que retorna o próximo elemento
 NodeL getListNext(NodeL node) {
     NodeStruct* nodeAux = (NodeStruct*)node;
@@ -170,5 +176,16 @@ NodeL getListNodeByIndex(List list, int index){
     }
 
     return NULL;
+
+}
+
+void swapListInfo(NodeL node1, NodeL node2){
+    NodeStruct* nodeAux1 = (NodeStruct*) node1;
+    NodeStruct* nodeAux2 = (NodeStruct*) node2;
+
+    Info aux = nodeAux1->info;
+
+    nodeAux1->info = nodeAux2->info;
+    nodeAux2->info = aux;
 
 }

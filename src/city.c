@@ -47,8 +47,6 @@ int cityInsert(City city, Info info, double keyX, double keyY, double width, cha
     int tree = treeInsert(cityAux->tree, info, keyX, keyY, width);
     int table = hashTableInsert(cityAux->table, keyHash, info);
 
-    // printf("%s\n", getBlockCep(info));
-
     return tree == 0 || table == 0 ? 0 : 1;
 }
 
