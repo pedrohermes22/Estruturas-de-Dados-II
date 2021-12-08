@@ -9,12 +9,25 @@
  */
 char *getSvgPath(char *bsd, char *name);
 
-// Retorna a coordenada X do registrador.
+/*
+Função: Retorna a coordenada X do registrador.
+Pré: Um char com a face, um int com o numero, um void* com a quadra;
+Pós: Retorna um double com o valor.
+*/
 double getXCoordinate(char face, int number, Block block);
 
-// Retorna a coordenada Y do registrador.
+/*
+Função: Retorna a coordenada Y do registrador.
+Pré: Um char com a face, um int com o numero, um void* com a quadra;
+Pós: Retorna um double com o valor.
+*/
 double getYCoordinate(char face, int number, Block block);
 
+/*
+Função: Retorna o vértice mais próximo de um determinado ponto
+Pré: Um void* com o grafo, um double com o x, um double com o y;
+Pós: Retorna um void* com um nó da lista de adjacência.
+*/
 AdjList getClosestVertex(Graph graph, double x, double y);
 
 #endif

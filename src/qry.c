@@ -209,6 +209,11 @@ void cxCommand(Graph graph, double limiar) {
         }
     }
 
+    for(NodeL nodeAux = getListFirst(uf); nodeAux; nodeAux = getListNext(nodeAux)){
+        destroyGraph(getListInfo(nodeAux));
+    }
+    endList(uf);
+
     endList(edges);
 }
 

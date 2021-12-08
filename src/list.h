@@ -8,7 +8,7 @@ typedef void* Info;
 /*
 Função: Cria Uma lista dinamica.
 Pré: Nenhum requesito.
-Pós: Retorna um void* com o endereço da lista
+Pós: Retorna um void* com o endereço da lista.
 */
 List createList();
 
@@ -61,6 +61,11 @@ Pós: Um void* com o endereço do no.
 */
 NodeL getListFirst(List list);
 
+/*
+Função: Recupera o último no de uma lista dinamica.
+Pré: Um void* com o endereço da lista.
+Pós: Um void* com o endereço do no.
+*/
 NodeL getListLast(List list);
 
 /*
@@ -77,10 +82,25 @@ Pós: Um int com o valor.
 */
 int getListVisit(List list);
 
+/*
+Função: Recupera o índice de um nó da lista dinamica.
+Pré: Um void* com o endereço do nó.
+Pós: Um int com o valor.
+*/
 int getListIndexOf(NodeL node);
 
+/*
+Função: Recupera um nó da lista dinamica com base em um índice.
+Pré: Um void* com o endereço da lista, um int com o índice.
+Pós: Um void* com o endereço do no.
+*/
 NodeL getListNodeByIndex(List list, int index);
 
+/*
+Função: Troca os valores de dois nós de uma lista dinamica.
+Pré: Um void* com o endereço do no1, Um void* com o endereço do no2.
+Pós: Nenhum retorno.
+*/
 void swapListInfo(NodeL node1, NodeL node2);
 
 #endif

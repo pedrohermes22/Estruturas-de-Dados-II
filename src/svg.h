@@ -34,8 +34,18 @@ void drawCircle(FILE *svgFile, double x, double y, double r, char *fill);
  * FIEL *svgFile: SVG alvo. */
 void drawDots(Graph graph, FILE *svgFile);
 
+/* Desenha a árvore resultante do kruskal
+ *
+ * Graph graph: Grafo com as informações.
+ * FIEL *svgFile: SVG alvo. */
 void drawKruskal(Graph graph, FILE *svgFile);
 
+/* Desenha as áreas do comando CX.
+ *
+ * Graph graph: Grafo com as informações.
+ * 
+ * FIEL *svgFile: SVG alvo.
+ * char *color: Cor do preenchimento. */
 void drawCxCommand(Graph graph, FILE *svgFile, char* color);
 
 /* Insere as linhas do TXT temporário no SVG.
