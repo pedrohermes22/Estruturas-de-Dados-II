@@ -38,7 +38,7 @@ int searchLesserDist(Graph graph, int* visit, double* dist){
     return lesser;
 }
 
-void updateSize(Graph graph, double* dist, int* back, AdjList adjU, int u, int v, int index){
+void updateSize(double* dist, int* back, AdjList adjU, int u, int v, int index){
     int i = 0;
 
     List edgeU = getEdgeList(adjU);
@@ -54,15 +54,17 @@ void updateSize(Graph graph, double* dist, int* back, AdjList adjU, int u, int v
     }
 
     if(edgeV){
-        if(dist[v] > dist[u] + getEdgeSize(edgeV)){
-            dist[v] = dist[u] + getEdgeSize(edgeV);
-            back[v] = u;
+        if(isEdgeValid(edgeV)){
+            if(dist[v] > dist[u] + getEdgeSize(edgeV)){
+                dist[v] = dist[u] + getEdgeSize(edgeV);
+                back[v] = u;
+            }
         }
     }
 
 }
 
-void updateSpeed(Graph graph, double* dist, int* back, AdjList adjU, int u, int v, int index){
+void updateSpeed(double* dist, int* back, AdjList adjU, int u, int v, int index){
     int i = 0;
 
     List edgeU = getEdgeList(adjU);
@@ -81,10 +83,9 @@ void updateSpeed(Graph graph, double* dist, int* back, AdjList adjU, int u, int 
         if(isEdgeValid(edgeV)){
             if(dist[v] > dist[u] + getEdgeSpeed(edgeV)){
                 dist[v] = dist[u] + getEdgeSpeed(edgeV);
-                back[v] = -1;
+                back[v] = u;
             }
         }
-        // TODO: Se não funcionar tem que mudar aqui por causa do comando cx
     }
 
 }
@@ -109,7 +110,6 @@ List dijkstraSpeed(Graph graph, char* origin, char* destiny){
 
     double dist[v];
     int dest;
-    int orig;
 
     for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
         int i = getListIndexOf(nodeAux);
@@ -119,7 +119,6 @@ List dijkstraSpeed(Graph graph, char* origin, char* destiny){
         back[i] = -1;
         
         if (strcmp(getVertexId(getListInfo(nodeAux)), origin) == 0) {
-            orig = i;
             dist[i] = 0;
         }
 
@@ -141,7 +140,7 @@ List dijkstraSpeed(Graph graph, char* origin, char* destiny){
         for(NodeL nodeAux = getListFirst(edgeU); nodeAux; nodeAux = getListNext(nodeAux)){
             index = getListIndexOf(nodeAux);
             int i = findIndex(graph, getEdgeDestiny(getListInfo(nodeAux)));
-            updateSpeed(graph, dist, back, adjU, u, i, index);
+            updateSpeed(dist, back, adjU, u, i, index);
         }
     }
 
@@ -163,8 +162,6 @@ List dijkstraSpeed(Graph graph, char* origin, char* destiny){
     }
 
     return dijkstra;
-
-    return dijkstra;
 }
 
 List dijkstraSize(Graph graph, char* origin, char* destiny){
@@ -176,7 +173,6 @@ List dijkstraSize(Graph graph, char* origin, char* destiny){
 
     double dist[v];
     int dest;
-    int orig;
 
     for(NodeL nodeAux = getListFirst(getAdjList(graph)); nodeAux; nodeAux = getListNext(nodeAux)){
         int i = getListIndexOf(nodeAux);
@@ -185,7 +181,6 @@ List dijkstraSize(Graph graph, char* origin, char* destiny){
         dist[i] = DOUBLE_MAX;
         back[i] = -1;
         if (strcmp(getVertexId(getListInfo(nodeAux)), origin) == 0) {
-            orig = i;
             dist[i] = 0;
         }
 
@@ -207,7 +202,7 @@ List dijkstraSize(Graph graph, char* origin, char* destiny){
         for(NodeL nodeAux = getListFirst(edgeU); nodeAux; nodeAux = getListNext(nodeAux)){
             index = getListIndexOf(nodeAux);
             int i = findIndex(graph, getEdgeDestiny(getListInfo(nodeAux)));
-            updateSize(graph, dist, back, adjU, u, i, index);
+            updateSize(dist, back, adjU, u, i, index);
         }
     }
 

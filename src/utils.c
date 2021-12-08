@@ -2,9 +2,12 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "graph.h"
 #include "block.h"
+#include "path.h"
 
 /*
  * Retorna o caminho para o SVG com o nome correto, de acordo com o parâmetro "name".

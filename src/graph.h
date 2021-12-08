@@ -57,6 +57,8 @@ char* getEdgeRightCep(Edge edge);
 
 char* getEdgeLeftCep(Edge edge);
 
+void setEdgeSpeed(Edge edge, double speed);
+
 int isEdgeValid(Edge edge);
 
 void setEdgeValid(Edge edge, int valid);

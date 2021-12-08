@@ -130,7 +130,7 @@ void rvCommand(Graph graph, double x, double y, double width, double height, dou
 
     // Desenha o retângulo com a área do rv.
     sprintf(rect,
-            "\t<rect x='%lf' y='%lf' width='%lf' height='%lf' fill='#AB37C8' stroke='#AA0044' stroke-width='3' stroke-dasharray='2' fill-opacity='0.5'/>\n",
+            "\t<rect x='%lf' y='%lf' width='%lf' height='%lf' fill='none' stroke='#AA0044' stroke-width='5' stroke-dasharray='2' fill-opacity='0.5'/>\n",
             x, y, width, height);
     writeTxt(getTempTxt(), rect);
 
@@ -258,7 +258,7 @@ void pCommand(Register_R r, Graph graph, HashTable hash, char *cep, char face, i
     }
 
     if (getListSize(size) == 0) {
-        fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5;stroke-dash:4' />\n", x, y, r.x, r.y, "red");
+        fprintf(getTempTxt(), "\t<line x1='%lf' y1='%lf' x2='%lf' y2='%lf' style='stroke:%s;stroke-width:5;stroke-dasharray:4' />\n", x, y, r.x, r.y, "red");
         fprintf(getOutTxt(), "Destino inacessível\n");
     }
 

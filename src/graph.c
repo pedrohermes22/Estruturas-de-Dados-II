@@ -420,7 +420,7 @@ void setEdgeSpeed(Edge edge, double speed){
 int isEdgeValid(Edge edge){
     EdgeStruct* edgeAux = (EdgeStruct* ) edge;
 
-    edgeAux->isActive;
+    return edgeAux->isActive;
 }
 
 void setEdgeValid(Edge edge, int valid){

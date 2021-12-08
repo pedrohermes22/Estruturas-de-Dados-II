@@ -61,7 +61,7 @@ int geoCommands(Tree tree, HashTable *hash, FILE *svgFile, char *bed, char *bsd,
 }
 
 // Executa comandos referentes ao ".via".
-void mapCommands(Graph graph, FILE *svgFile, char *bed, char *bsd, char *mapName) {
+void mapCommands(Graph graph, FILE *svgFile, char *bed, char *mapName) {
     char *mapPath = catPath(bed, mapName);
 
     openMap(mapPath, graph, svgFile);
@@ -69,10 +69,16 @@ void mapCommands(Graph graph, FILE *svgFile, char *bed, char *bsd, char *mapName
 }
 
 // Executa os comandos do QRY.
-void qryCommands(Tree tree, HashTable hash, Graph graph, char *bed, char *bsd, char *qryName) {
-    char *qName = extractName(qryName);        // Nome do QRY.
+void qryCommands(Tree tree, HashTable hash, Graph graph, char *bed, char *bsd, char *qryName, char* geoName) {
+    char *qNameAux = extractName(qryName);        // Nome do QRY.
+    char* gNameAux = extractName(geoName);
+    char* qName = malloc(strlen(qNameAux) + strlen(gNameAux) + 2);
+    sprintf(qName, "%s-%s", gNameAux, qNameAux);
+    char* qNameSVG = malloc(strlen(qName)+5);
+    sprintf(qNameSVG, "%s.svg", qName);
+
     char *qryPath = catPath(bed, qryName);     // Diretório do QRY.
-    char *svgPath = getSvgPath(bsd, qryName);  // Diretório do SVG.
+    char *svgPath = getSvgPath(bsd, qNameSVG);  // Diretório do SVG.
     char dir[200];                             // Diretório do TXT temporário.
     FILE *svgFile = fopen(svgPath, "w");       // Ponteiro do SVG.
 
@@ -94,6 +100,9 @@ void qryCommands(Tree tree, HashTable hash, Graph graph, char *bed, char *bsd, c
     closeSvg(svgFile);
     remove(dir);
 
+    free(qNameSVG);
+    free(gNameAux);
+    free(qNameAux);
     free(qName);
     free(qryPath);
     free(svgPath);
@@ -146,8 +155,8 @@ void readParameters(Tree tree, int argc, char *argv[]) {
     FILE *svgFile = fopen(svgPath, "w");
 
     if (!geoCommands(tree, &hash, svgFile, bed, bsd, geoName)) return;
-    if (mapName != NULL) mapCommands(graph, svgFile, bed, bsd, mapName);
-    if (qryName != NULL) qryCommands(tree, hash, graph, bed, bsd, qryName);
+    if (mapName != NULL) mapCommands(graph, svgFile, bed, mapName);
+    if (qryName != NULL) qryCommands(tree, hash, graph, bed, bsd, qryName, geoName);
 
     // Fecha o SVG aberto anteriormente.
     closeSvg(svgFile);

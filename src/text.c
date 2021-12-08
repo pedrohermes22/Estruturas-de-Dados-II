@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 FILE *tempTxt = NULL;  // Armazena comandos SVG.
 FILE *outTxt = NULL;   // Armazena as saídas dos comandos do QRY.
@@ -41,5 +42,5 @@ void closeTxt(FILE *file) {
 void writeTxt(FILE *file, char *text) {
     if (file == NULL) return;
 
-    fprintf(file, text);
+    fprintf(file,"%s", text);
 }
