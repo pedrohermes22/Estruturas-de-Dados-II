@@ -10,7 +10,7 @@ int sortingAux(List edges, int origin, int destiny){
 
     int pI = origin;
 
-    for( int i = pI; i < destiny; i++){
+    for( int i = origin; i < destiny; i++){
         if(getEdgeSize(getListInfo(getListNodeByIndex(edges, i))) <= p){
             swapListInfo(getListNodeByIndex(edges, i), getListNodeByIndex(edges, pI));
             pI++;
@@ -22,7 +22,7 @@ int sortingAux(List edges, int origin, int destiny){
 }
 
 void sorting(List edges, int origin, int destiny){
-    if(origin > destiny){
+    if(origin >= destiny){
         return;
     }
 
